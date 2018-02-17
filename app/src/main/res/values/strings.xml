@@ -1,0 +1,57 @@
+<resources>
+    <string name="app_name">برتر ها</string>
+    <string name="title_activity_splash">Splash</string>
+    <string name="title_activity_main">برتر ها</string>
+
+    <string name="nav_add">اضافه کردن گزارش</string>
+    <string name="nav_activities">مشاهده فعالیت ها</string>
+    <string name="nav_setting">تنظیمات</string>
+    <string name="nav_profile">پروفایل</string>
+    <string name="nav_aboutus">درباره ما</string>
+    <string name="nav_contactus">ارتباط با ما</string>
+    <string name="nav_help">راهنما</string>
+    <string name="nav_exit">خروج</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_back">برگشت</string>
+    <string name="title_activity_add">اضافه کردن فعالیت</string>
+    <string name="title_activity_activites">مشاهده فعالیت ها</string>
+
+    <string name="tasks_main">دسته</string>
+    <string name="task_sublevel">زیر دسته</string>
+    <string name="task_type">نوع فعالیت</string>
+    <string name="group_main_code">مقطع</string>
+    <string name="group_code">گروه آزمایشی</string>
+    <string name="course_id">نام درس</string>
+    <string name="test_date">تاریخ آزمون</string>
+    <string name="books">نام کتاب</string>
+    <string name="version">تسخه</string>
+    <string name="location">محل استفاده</string>
+    <string name="channel_id">نام کانال</string>
+    <string name="test_type">نوع دفترچه</string>
+    <string name="category">حوزه فعالیت</string>
+    <string name="crs_subject">مبحث</string>
+    <string name="subject">موضوع</string>
+    <string name="session_date">تاریخ جلسه</string>
+    <string name="session_location">محل جلسه</string>
+    <string name="session_manager">مدیر جلسه</string>
+    <string name="total_call_count">تعداد کل تماس</string>
+    <string name="successful_call_count">تعداد تماس موفق</string>
+    <string name="unsuccessful_call_count">تعداد تماس ناموفق</string>
+    <string name="owner">سفارش دهنده</string>
+    <string name="interviewee">نام مصاحبه شونده</string>
+    <string name="learn_course">منبع یادگیری</string>
+    <string name="description">توضیحات</string>
+    <string name="count">تعداد</string>
+    <string name="page_count">تعداد صفحه</string>
+    <string name="question_count">تعداد سوال</string>
+    <string name="time">زمان (دقیقه)</string>
+    <string name="generate_date">تاریخ تولید</string>
+    <string name="send_date">تاریخ ارسال</string>
+
+
+    <string name="select_one">انتخاب کنید...</string>
+
+
+</resources>
