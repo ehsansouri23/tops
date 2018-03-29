@@ -1,5 +1,6 @@
 package com.kanoon.topapps.adapter;
 
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -55,7 +56,9 @@ public class MenuListAdapter extends RecyclerView.Adapter<MenuListAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, final int position) {
         int state = menuItemList.get(position).getState();
         String title = Labels.getLabel(activity.getApplicationContext(), state);
+        holder.title.setTypeface(Typeface.createFromAsset(activity.getAssets(), "fonts/sl.ttf"));
         holder.title.setText(title);
+        holder.chosen.setTypeface(Typeface.createFromAsset(activity.getAssets(), "fonts/sl.ttf"));
         holder.chosen.setText(menuItemList.get(position).getChosen());
         if (menuItemList.get(position).isDone())
             holder.layout.setBackgroundColor(activity.getApplicationContext().getResources().getColor(R.color.colorDone));

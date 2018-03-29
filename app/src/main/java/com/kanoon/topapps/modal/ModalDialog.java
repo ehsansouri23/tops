@@ -2,21 +2,30 @@ package com.kanoon.topapps.modal;
 
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Display;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
 import com.kanoon.topapps.R;
 import com.kanoon.topapps.activities.AddTaskActivity;
 import com.kanoon.topapps.adapter.ModalMenuListAdapter;
+import com.kanoon.topapps.consts.Types;
 
 import java.util.List;
 
@@ -29,25 +38,39 @@ public class ModalDialog extends Dialog {
     private RecyclerView recyclerView;
     private TextView titleTextview;
     private TextSwitcher textSwitcher;
-    private EditText searchBar;
+    private EditText searchBar, enterValue;
+    private Button submit;
     private String title;
     private List<ModalMenuItem> modalMenuItemList;
     private ModalMenuListAdapter adapter;
     private AddTaskActivity activity;
+    private int type;
 
     public ModalDialog(String title, List<ModalMenuItem> modalMenuItemList, AddTaskActivity activity) {
         super(activity);
         this.modalMenuItemList = modalMenuItemList;
         this.title = title;
         this.activity = activity;
-        adapter = new ModalMenuListAdapter(modalMenuItemList);
+        adapter = new ModalMenuListAdapter(modalMenuItemList, activity);
+        type = Types.TYPE_OPTION;
+    }
+
+    public ModalDialog(String title, AddTaskActivity activity) {
+        super(activity);
+        this.title = title;
+        this.activity = activity;
+        type = Types.TYPE_INPUT;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.modal_layout);
+        if (type == Types.TYPE_OPTION)
+            setContentView(R.layout.modal_layout);
+        else
+            setContentView(R.layout.edittext_modal_layout);
+
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         Display d = getWindow().getWindowManager().getDefaultDisplay();
@@ -57,34 +80,49 @@ public class ModalDialog extends Dialog {
         getWindow().setAttributes(lp);
         setCanceledOnTouchOutside(false);
 
-        recyclerView = (RecyclerView) findViewById(R.id.menu_list);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(activity.getApplicationContext());
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
+        if (type == Types.TYPE_OPTION) {
+            recyclerView = (RecyclerView) findViewById(R.id.menu_list);
+            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(activity.getApplicationContext());
+            recyclerView.setLayoutManager(layoutManager);
+            recyclerView.setAdapter(adapter);
+
+            textSwitcher = (TextSwitcher) findViewById(R.id.textSwitcher);
+            Animation textAnimationIn = AnimationUtils.
+                    loadAnimation(activity.getApplicationContext(), android.R.anim.fade_in);
+            textAnimationIn.setDuration(300);
+
+            Animation textAnimationOut = AnimationUtils.
+                    loadAnimation(activity.getApplicationContext(), android.R.anim.fade_out);
+            textAnimationOut.setDuration(300);
+            textSwitcher.setInAnimation(textAnimationIn);
+            textSwitcher.setOutAnimation(textAnimationOut);
+
+            textSwitcher.setFactory(new ViewSwitcher.ViewFactory() {
+                @Override
+                public View makeView() {
+                    TextView t = new TextView(activity.getApplicationContext());
+                    t.setTypeface(Typeface.createFromAsset(activity.getAssets(), "fonts/sl.ttf"));
+                    t.setText("salam");
+                    return t;
+                }
+            });
+            textSwitcher.setCurrentText(title);
+
+            searchBar = (EditText) findViewById(R.id.search_bar);
+            searchBar.setTypeface(Typeface.createFromAsset(activity.getAssets(), "fonts/sl.ttf"));
+
+        } else {
+            titleTextview = (TextView) findViewById(R.id.title);
+            enterValue = (EditText) findViewById(R.id.edit);
+            submit = (Button) findViewById(R.id.submit);
+            titleTextview.setTypeface(Typeface.createFromAsset(activity.getAssets(), "fonts/sl.ttf"));
+            titleTextview.setText(title);
+            enterValue.setTypeface(Typeface.createFromAsset(activity.getAssets(), "fonts/sl.ttf"));
+            submit.setTypeface(Typeface.createFromAsset(activity.getAssets(), "fonts/sl.ttf"));
+        }
     }
 
 
-
-    //    @Nullable
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-//        View v = inflater.inflate(R.layout.modal_layout, container);
-//        recyclerView = (RecyclerView) v.findViewById(R.id.modal_items_list);
-//        titleTextview = (TextView) v.findViewById(R.id.title);
-//        textSwitcher = (TextSwitcher) v.findViewById(R.id.textSwitcher);
-//        searchBar = (EditText) v.findViewById(R.id.search_bar);
-//
-//        Animation textAnimationIn =  AnimationUtils.
-//                loadAnimation(activity.getApplicationContext(),   android.R.anim.fade_in);
-//        textAnimationIn.setDuration(300);
-//
-//        Animation textAnimationOut =  AnimationUtils.
-//                loadAnimation(activity.getApplicationContext(),   android.R.anim.fade_out);
-//        textAnimationOut.setDuration(300);
-//        textSwitcher.setInAnimation(textAnimationIn);
-//        textSwitcher.setOutAnimation(textAnimationOut);
-//
-//
 //        searchBar.addTextChangedListener(new TextWatcher() {
 //            @Override
 //            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -111,40 +149,16 @@ public class ModalDialog extends Dialog {
 //
 //        textSwitcher.setText(title);
 //
-//        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-//        recyclerView.setLayoutManager(layoutManager);
-//        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
-//        itemAnimator.setAddDuration(1000);
-//        itemAnimator.setRemoveDuration(1000);
-//        itemAnimator.setChangeDuration(1000);
-//        recyclerView.setItemAnimator(itemAnimator);
-//        recyclerView.setAdapter(adapter);
 //    }
 
-//    public void onResume() {
-//        super.onResume();
-//
-//        Window window = getDialog().getWindow();
-//        Point size = new Point();
-//
-//        Display display = window.getWindowManager().getDefaultDisplay();
-//        display.getSize(size);
-//
-//        int width = size.x;
-//
-//        window.setLayout((int) (width * 0.8), WindowManager.LayoutParams.WRAP_CONTENT);
-//        window.setGravity(Gravity.CENTER);
-//
-//        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//    }
 
-//    public void reload(String title, List<ModalMenuItem> modalMenuItemList) {
-//        textSwitcher.setText(title);
-//        searchBar.setText("");
-//        this.modalMenuItemList = modalMenuItemList;
-//        adapter.setItems(this.modalMenuItemList);
-//        adapter.notifyDataSetChanged();
-//    }
+    public void reload(String title, List<ModalMenuItem> modalMenuItemList) {
+        textSwitcher.setText(title);
+        searchBar.setText("");
+        this.modalMenuItemList = modalMenuItemList;
+        adapter.setModalMenuItemList(this.modalMenuItemList);
+        adapter.notifyDataSetChanged();
+    }
 
 
 }
