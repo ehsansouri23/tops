@@ -1,7 +1,12 @@
 package com.kanoon.topapps.data.model;
 
+import android.util.Log;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.kanoon.topapps.consts.State;
+
+import java.util.HashMap;
 
 /**
  * Created by ehsan on 2/15/2018.
@@ -87,6 +92,9 @@ public class TaskType {
     @SerializedName("IsTestType")
     @Expose
     private Boolean isTestType;
+    @SerializedName("IsManagerUserId")
+    @Expose
+    private Boolean IsManagerUserId;
 
     private Boolean isTaskMain = true;
     private Boolean isTaskSubLevel = true;
@@ -324,6 +332,14 @@ public class TaskType {
         isTaskTypes = taskTypes;
     }
 
+    public Boolean getManagerUserId() {
+        return IsManagerUserId;
+    }
+
+    public void setManagerUserId(Boolean managerUserId) {
+        IsManagerUserId = managerUserId;
+    }
+
     @Override
     public String toString() {
         return "TaskType{" +
@@ -354,5 +370,145 @@ public class TaskType {
                 ", isDescription=" + isDescription +
                 ", isTestType=" + isTestType +
                 '}';
+    }
+
+    public int getNextState(int curState) {
+        if (curState == State.STATE_GROUP_MAIN_CODE)
+            return State.STATE_GROUP_CODE;
+
+        curState++;
+        for (int i = curState; i <= State.STATE_FINISH; i++) {
+            switch (i) {
+                case State.STATE_TASK_SUBLEVEL:
+                    if (getTaskSubLevel())
+                        return State.STATE_TASK_SUBLEVEL;
+                    break;
+                case State.STATE_TASK_TYPE:
+                    if (getTaskTypes())
+                        return State.STATE_TASK_TYPE;
+                    break;
+                case State.STATE_MANAGER_USER_ID:
+                    if (getManagerUserId())
+                        return State.STATE_MANAGER_USER_ID;
+                    break;
+                //todo: take a look at here
+                case State.STATE_GROUP_MAIN_CODE:
+                    if (getIsGroup())
+                        return State.STATE_GROUP_MAIN_CODE;
+                    break;
+                case State.STATE_GROUP_CODE:
+                    if (getIsGroup())
+                        return State.STATE_GROUP_CODE;
+                    break;
+                case State.STATE_TEST_DATE:
+                    if (getIsTestDate())
+                        return State.STATE_TEST_DATE;
+                    break;
+                case State.STATE_COURSE_ID:
+                    if (getIsCourse())
+                        return State.STATE_COURSE_ID;
+                    break;
+                case State.STATE_BOOKS:
+                    if (getIsBookName())
+                        return State.STATE_BOOKS;
+                    break;
+                case State.STATE_VERSION:
+                    if (getIsVersion())
+                        return State.STATE_VERSION;
+                    break;
+                //todo: take a look a here
+                case State.STATE_LOCATION:
+                    if (getIsLocation())
+                        return State.STATE_LOCATION;
+                    break;
+                case State.STATE_CHANNEL_ID:
+                    if (getIsLocation())
+                        return State.STATE_CHANNEL_ID;
+                    break;
+                case State.STATE_TEST_TYPE:
+                    if (getIsTestType())
+                        return State.STATE_TEST_TYPE;
+                    break;
+                case State.STATE_CATEGORY:
+                    if (getIsCatagory())
+                        return State.STATE_CATEGORY;
+                    break;
+                case State.STATE_CRS_SUBJECT:
+                    if (getIsCrsSubject())
+                        return State.STATE_CRS_SUBJECT;
+                    break;
+                case State.STATE_SUBJECT:
+                    if (getIsSubject())
+                        return State.STATE_SUBJECT;
+                    break;
+                case State.STATE_SESSION_DATE:
+                    if (getIsSesssionDate())
+                        return State.STATE_SESSION_DATE;
+                    break;
+                case State.STATE_SESSION_LOCATION:
+                    if (getIsSesssionLocation())
+                        return State.STATE_SESSION_LOCATION;
+                    break;
+                case State.STATE_SESSION_MANAGER:
+                    if (getIsSesssionManager())
+                        return State.STATE_SESSION_MANAGER;
+                    break;
+                case State.STATE_TOTAL_CALL_COUNT:
+                    if (getIsTotalCallCount())
+                        return State.STATE_TOTAL_CALL_COUNT;
+                    break;
+                case State.STATE_SUCCESSFUL_CALL_COUNT:
+                    if (getIsSuccessCallCount())
+                        return State.STATE_SUCCESSFUL_CALL_COUNT;
+                    break;
+                case State.STATE_UNSUCCESSFUL_CALL_COUNT:
+                    if (getIsUnsuccessfulCallCount())
+                        return State.STATE_UNSUCCESSFUL_CALL_COUNT;
+                    break;
+                case State.STATE_OWNER:
+                    if (getIsOwner())
+                        return State.STATE_OWNER;
+                    break;
+                case State.STATE_INTERVIEWEE:
+                    if (getIsInterviewee())
+                        return State.STATE_INTERVIEWEE;
+                    break;
+                case State.STATE_LEARN_SOURCE:
+                    if (getIsLearnSource())
+                        return State.STATE_LEARN_SOURCE;
+                    break;
+                case State.STATE_DESCRIPTION:
+                    if (getIsDescription())
+                        return State.STATE_DESCRIPTION;
+                    break;
+                case State.STATE_COUNT:
+                    if (getIsCourse())
+                        return State.STATE_COUNT;
+                    break;
+                case State.STATE_PAGE_COUNT:
+                    if (getIsPageCount())
+                        return State.STATE_PAGE_COUNT;
+                    break;
+                case State.STATE_QUESTION_COUNT:
+                    if (getIsQuestionCount())
+                        return State.STATE_QUESTION_COUNT;
+                    break;
+                case State.STATE_TIME:
+                    if (getIstime())
+                        return State.STATE_TIME;
+                    break;
+                case State.STATE_GENERATE_DATE:
+                    if (getIsGenerateDate())
+                        return State.STATE_GENERATE_DATE;
+                    break;
+                case State.STATE_SEND_DATE:
+                    if (getIsSendDate())
+                        return State.STATE_SEND_DATE;
+                    break;
+                default:
+                    return State.STATE_FINISH;
+            }
+        }
+        return -1;
     }
 }

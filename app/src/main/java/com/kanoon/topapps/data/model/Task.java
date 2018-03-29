@@ -10,112 +10,115 @@ import com.google.gson.annotations.SerializedName;
 public class Task {
     @SerializedName("Id")
     @Expose
-    private int id;
+    private int id = 0;
     @SerializedName("CreatorUserId")
     @Expose
-    private int creatorUserId;
+    private int creatorUserId = 0;
     @SerializedName("CreateDateTime")
     @Expose
-    private String createDateTime;
+    private String createDateTime = "2018-02-28 20:02";
     @SerializedName("TaskMainId")
     @Expose
-    private int taskMainId;
+    private int taskMainId = 0;
     @SerializedName("TaskSubLevelId")
     @Expose
-    private int taskSubLevelId;
+    private int taskSubLevelId = 0;
     @SerializedName("TaskType")
     @Expose
-    private int taskType;
+    private int taskType = 0;
     @SerializedName("Location")
     @Expose
-    private int location;
+    private int location = 0;
     @SerializedName("ChannelId")
     @Expose
-    private int channelId;
+    private int channelId = 0;
     @SerializedName("CourseId")
     @Expose
-    private int courseId;
+    private int courseId = 0;
     @SerializedName("GroupMainCode")
     @Expose
-    private int groupMainCode;
+    private int groupMainCode = 0;
     @SerializedName("GroupCode")
     @Expose
-    private int groupCode;
+    private int groupCode = 0;
     @SerializedName("TestDate")
     @Expose
-    private int testDate;
+    private int testDate = 0;
     @SerializedName("TestType")
     @Expose
-    private int testType;
+    private int testType = 0;
     @SerializedName("PageCount")
     @Expose
-    private int pageCount;
+    private int pageCount = 0;
     @SerializedName("Count")
     @Expose
-    private int count;
+    private int count = 0;
     @SerializedName("QuestionCount")
     @Expose
-    private int questionCount;
+    private int questionCount = 0;
     @SerializedName("CrsSubject")
     @Expose
-    private Object crsSubject;
+    private String crsSubject = "";
     @SerializedName("Time")
     @Expose
-    private int time;
+    private int time = 0;
     @SerializedName("GenerateDate")
     @Expose
-    private Object generateDate;
+    private String generateDate = "";
     @SerializedName("Subject")
     @Expose
-    private Object subject;
+    private String subject = "";
     @SerializedName("SesssionDate")
     @Expose
-    private Object sesssionDate;
+    private String sesssionDate = "";
     @SerializedName("SesssionManager")
     @Expose
-    private Object sesssionManager;
+    private String sesssionManager = "";
     @SerializedName("SesssionLocation")
     @Expose
-    private Object sesssionLocation;
+    private String sesssionLocation = "";
     @SerializedName("SendDate")
     @Expose
-    private Object sendDate;
+    private String sendDate = "";
     @SerializedName("LearnSource")
     @Expose
-    private Object learnSource;
+    private String learnSource = "";
     @SerializedName("BookId")
     @Expose
-    private int bookId;
+    private int bookId = 0;
     @SerializedName("Version")
     @Expose
-    private int version;
+    private int version = 0;
     @SerializedName("Interviewee")
     @Expose
-    private Object interviewee;
+    private String interviewee = "";
     @SerializedName("TotalCallCount")
     @Expose
-    private int totalCallCount;
+    private int totalCallCount = 0;
     @SerializedName("SuccessCallCount")
     @Expose
-    private int successCallCount;
+    private int successCallCount = 0;
     @SerializedName("UnsuccessfulCallCount")
     @Expose
-    private int unsuccessfulCallCount;
+    private int unsuccessfulCallCount = 0;
     @SerializedName("Category")
     @Expose
-    private int category;
+    private int category = 0;
     @SerializedName("Owner")
     @Expose
-    private Object owner;
+    private String owner = "";
     @SerializedName("Description")
     @Expose
-    private Object description;
+    private String description = "";
     @SerializedName("TaskValue")
     @Expose
-    private int taskValue;
+    private int taskValue = 0;
     @SerializedName("StartDate")
     @Expose
-    private Object startDate;
+    private String startDate = "";
+    @SerializedName("ManagerUserId")
+    @Expose
+    private Integer ManagerUserId = 0;
 
     public int getId() {
         return id;
@@ -245,11 +248,11 @@ public class Task {
         this.questionCount = questionCount;
     }
 
-    public Object getCrsSubject() {
+    public String getCrsSubject() {
         return crsSubject;
     }
 
-    public void setCrsSubject(Object crsSubject) {
+    public void setCrsSubject(String crsSubject) {
         this.crsSubject = crsSubject;
     }
 
@@ -265,15 +268,15 @@ public class Task {
         return generateDate;
     }
 
-    public void setGenerateDate(Object generateDate) {
+    public void setGenerateDate(String generateDate) {
         this.generateDate = generateDate;
     }
 
-    public Object getSubject() {
+    public String getSubject() {
         return subject;
     }
 
-    public void setSubject(Object subject) {
+    public void setSubject(String subject) {
         this.subject = subject;
     }
 
@@ -281,7 +284,7 @@ public class Task {
         return sesssionDate;
     }
 
-    public void setSesssionDate(Object sesssionDate) {
+    public void setSesssionDate(String sesssionDate) {
         this.sesssionDate = sesssionDate;
     }
 
@@ -289,7 +292,7 @@ public class Task {
         return sesssionManager;
     }
 
-    public void setSesssionManager(Object sesssionManager) {
+    public void setSesssionManager(String sesssionManager) {
         this.sesssionManager = sesssionManager;
     }
 
@@ -297,7 +300,7 @@ public class Task {
         return sesssionLocation;
     }
 
-    public void setSesssionLocation(Object sesssionLocation) {
+    public void setSesssionLocation(String sesssionLocation) {
         this.sesssionLocation = sesssionLocation;
     }
 
@@ -305,15 +308,15 @@ public class Task {
         return sendDate;
     }
 
-    public void setSendDate(Object sendDate) {
+    public void setSendDate(String sendDate) {
         this.sendDate = sendDate;
     }
 
-    public Object getLearnSource() {
+    public String getLearnSource() {
         return learnSource;
     }
 
-    public void setLearnSource(Object learnSource) {
+    public void setLearnSource(String learnSource) {
         this.learnSource = learnSource;
     }
 
@@ -333,11 +336,11 @@ public class Task {
         this.version = version;
     }
 
-    public Object getInterviewee() {
+    public String getInterviewee() {
         return interviewee;
     }
 
-    public void setInterviewee(Object interviewee) {
+    public void setInterviewee(String interviewee) {
         this.interviewee = interviewee;
     }
 
@@ -373,19 +376,19 @@ public class Task {
         this.category = category;
     }
 
-    public Object getOwner() {
+    public String getOwner() {
         return owner;
     }
 
-    public void setOwner(Object owner) {
+    public void setOwner(String owner) {
         this.owner = owner;
     }
 
-    public Object getDescription() {
+    public String getDescription() {
         return description;
     }
 
-    public void setDescription(Object description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
@@ -401,49 +404,57 @@ public class Task {
         return startDate;
     }
 
-    public void setStartDate(Object startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
+    }
+
+    public Integer getManagerUserId() {
+        return ManagerUserId;
+    }
+
+    public void setManagerUserId(Integer managerUserId) {
+        ManagerUserId = managerUserId;
     }
 
     @Override
     public String toString() {
-        return "Task{" +
-                "id=" + id +
-                ", creatorUserId=" + creatorUserId +
-                ", createDateTime='" + createDateTime + '\'' +
-                ", taskMainId=" + taskMainId +
-                ", taskSubLevelId=" + taskSubLevelId +
-                ", taskType=" + taskType +
-                ", location=" + location +
-                ", channelId=" + channelId +
-                ", courseId=" + courseId +
-                ", groupMainCode=" + groupMainCode +
-                ", groupCode=" + groupCode +
-                ", testDate=" + testDate +
-                ", testType=" + testType +
-                ", pageCount=" + pageCount +
-                ", count=" + count +
-                ", questionCount=" + questionCount +
-                ", crsSubject=" + crsSubject +
-                ", time=" + time +
-                ", generateDate=" + generateDate +
-                ", subject=" + subject +
-                ", sesssionDate=" + sesssionDate +
-                ", sesssionManager=" + sesssionManager +
-                ", sesssionLocation=" + sesssionLocation +
-                ", sendDate=" + sendDate +
-                ", learnSource=" + learnSource +
-                ", bookId=" + bookId +
-                ", version=" + version +
-                ", interviewee=" + interviewee +
-                ", totalCallCount=" + totalCallCount +
-                ", successCallCount=" + successCallCount +
-                ", unsuccessfulCallCount=" + unsuccessfulCallCount +
-                ", category=" + category +
-                ", owner=" + owner +
-                ", description=" + description +
-                ", taskValue=" + taskValue +
-                ", startDate=" + startDate +
+        return "{" +
+                "\"id\":" + id +
+                " \"creatorUserId\":" + creatorUserId + "," +
+                " \"createDateTime\":" + createDateTime + '\'' +
+                " \"taskMainId\":" + taskMainId + "," +
+                " \"taskSubLevelId\":" + taskSubLevelId + "," +
+                " \"taskType\":" + taskType + "," +
+                " \"location\":" + location + "," +
+                " \"channelId\":" + channelId + "," +
+                " \"courseId\":" + courseId + "," +
+                " \"groupMainCode\":" + groupMainCode + "," +
+                " \"groupCode\":" + groupCode + "," +
+                " \"testDate\":" + testDate + "," +
+                " \"testType\":" + testType + "," +
+                " \"pageCount\":" + pageCount + "," +
+                " \"count\":" + count + "," +
+                " \"questionCount\":" + questionCount + "," +
+                " \"crsSubject\":" + crsSubject + "," +
+                " \"time\":" + time + "," +
+                " \"generateDate\":" + generateDate + "," +
+                " \"subject\":" + subject + "," +
+                " \"sesssionDate\":" + sesssionDate + "," +
+                " \"sesssionManager\":" + sesssionManager + "," +
+                " \"sesssionLocation\":" + sesssionLocation + "," +
+                " \"sendDate\":" + sendDate + "," +
+                " \"learnSource\":" + learnSource + "," +
+                " \"bookId\":" + bookId + "," +
+                " \"version\":" + version + "," +
+                " \"interviewee\":" + interviewee + "," +
+                " \"totalCallCount\":" + totalCallCount + "," +
+                " \"successCallCount\":" + successCallCount + "," +
+                " \"unsuccessfulCallCount\":" + unsuccessfulCallCount + "," +
+                " \"category\":" + category + "," +
+                " \"owner\":" + owner + "," +
+                " \"description\":" + description + "," +
+                " \"taskValue\":" + taskValue + "," +
+                " \"startDate\":" + startDate + "," +
                 '}';
     }
 }
