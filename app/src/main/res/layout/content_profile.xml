@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.kanoon.topapps.activities.ProfileActivity"
+    tools:showIn="@layout/activity_profile">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/text_margin"
+            android:textColor="@color/darkColor"
+            android:textSize="25dp" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_avatar"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_below="@id/name"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="5dp"
+            android:src="@mipmap/ic_launcher" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/profile_avatar"
+            android:layout_marginRight="20dp">
+
+            <TextView
+                android:id="@+id/national_code_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="@string/national_code"
+                android:textColor="@color/colorAccent"
+                android:textDirection="rtl"
+                android:textStyle="bold"
+                android:textSize="20dp"/>
+
+            <TextView
+                android:id="@+id/national_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/national_code_title"
+                android:layout_marginTop="7dp"
+                android:textSize="18dp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/profile_avatar"
+            android:layout_marginLeft="20dp">
+
+            <TextView
+                android:id="@+id/mobile_number_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mobile_number"
+                android:textColor="@color/colorAccent"
+                android:textDirection="rtl"
+                android:textStyle="bold"
+                android:textSize="20dp"/>
+
+            <TextView
+                android:id="@+id/mobile_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/mobile_number_title"
+                android:layout_marginTop="7dp"
+                android:textSize="18dp" />
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+</android.support.v4.widget.NestedScrollView>

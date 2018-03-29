@@ -66,11 +66,15 @@ public class LoginActivity extends AppCompatActivity {
                     public void onResponse(Call<Login> call, Response<Login> response) {
                         loginInfo = response.body();
                         if (loginInfo.getStatus() == 0){
-                            appPrefsEditor.putBoolean("isLoggedin", true);
-                            appPrefsEditor.putString("name", loginInfo.getData().getUser().getName());
-                            appPrefsEditor.putString("lastName", loginInfo.getData().getUser().getLastName());
-                            appPrefsEditor.putString("uni", loginInfo.getData().getUser().getAuxCourseUni());
-                            appPrefsEditor.putString("avatarPath", "http://insp.kanoon.ir/Top/File/ShowUserPic?file=" + loginInfo.getData().getUser().getProfilePic());
+                            appPrefsEditor.putBoolean(Prefs.PREF_IS_LOGGED_IN, true);
+                            appPrefsEditor.putString(Prefs.PREF_FIRST_NAME, loginInfo.getData().getUser().getName());
+                            appPrefsEditor.putString(Prefs.PREF_LAST_NAME, loginInfo.getData().getUser().getLastName());
+                            appPrefsEditor.putString(Prefs.PREF_UNIVERSITY, loginInfo.getData().getUser().getAuxCourseUni());
+                            appPrefsEditor.putString(Prefs.PREF_AVATAR_PATH, "http://insp.kanoon.ir/Top/File/ShowUserPic?file=" + loginInfo.getData().getUser().getProfilePic());
+                            appPrefsEditor.putString(Prefs.PREF_NATIONAL_CODE, loginInfo.getData().getUser().getNationalCode());
+                            appPrefsEditor.putString(Prefs.PREF_MOBILE_NUMBER, loginInfo.getData().getUser().getMobile());
+                            appPrefsEditor.putString(Prefs.PREF_EMAIL, loginInfo.getData().getUser().getEmail());
+                            appPrefsEditor.putString(Prefs.PREF_TOKEN, loginInfo.getData().getToken());
                             appPrefsEditor.commit();
                             Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(mainIntent);

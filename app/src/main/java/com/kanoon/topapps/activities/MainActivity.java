@@ -97,6 +97,8 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_activities) {
 
         } else if (id == R.id.nav_profile) {
+            Intent i = new Intent(MainActivity.this, ProfileActivity.class);
+            startActivity(i);
 
         } else if (id == R.id.nav_aboutus) {
             Intent i = new Intent(MainActivity.this, AddTaskActivity.class);
@@ -106,7 +108,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_logout) {
             SharedPreferences.Editor editor = appPrefs.edit();
-            editor.putBoolean("isNotLoggedin", true);
+            editor.putBoolean(Prefs.PREF_IS_LOGGED_IN, false);
             editor.commit();
             Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(loginIntent);

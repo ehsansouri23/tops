@@ -64,6 +64,11 @@
     <string name="password">کلمه عبور</string>
     <string name="login">ورود</string>
     <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity_profile">ProfileActivity</string>
+    <string name="national_code">کد ملی</string>
+    <string name="mobile_number">تلفن همراه</string>
+    <string name="university">دانشگاه</string>
+    <string name="action_settings">Settings</string>
 
 
 </resources>
