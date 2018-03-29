@@ -58,9 +58,11 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="search_bar">جستجو کنید</string>
     <string name="submit">ارسال</string>
+    <string name="enter">وارد کنید</string>
 
     <string name="username">نام کاربری</string>
     <string name="password">کلمه عبور</string>
+    <string name="login">ورود</string>
     <string name="title_activity_main2">Main2Activity</string>
 
 
