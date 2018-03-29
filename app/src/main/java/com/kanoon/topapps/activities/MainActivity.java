@@ -17,18 +17,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.kanoon.topapps.R;
 import com.kanoon.topapps.configs.Prefs;
-import com.kanoon.topapps.data.model.Login;
-import com.kanoon.topapps.data.remote.APIService;
-import com.kanoon.topapps.data.remote.ApiUtils;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -80,7 +72,7 @@ public class MainActivity extends AppCompatActivity
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.mainFragment, new Activites()).commit();
+        transaction.replace(R.id.mainFragment, new Activities()).commit();
     }
 
     @Override
