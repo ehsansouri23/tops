@@ -61,6 +61,7 @@
 
     <string name="username">نام کاربری</string>
     <string name="password">کلمه عبور</string>
+    <string name="title_activity_main2">Main2Activity</string>
 
 
 </resources>
