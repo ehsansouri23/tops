@@ -10,6 +10,7 @@
     <string name="nav_aboutus">درباره ما</string>
     <string name="nav_contactus">ارتباط با ما</string>
     <string name="nav_help">راهنما</string>
+    <string name="nav_logout">خروج از حساب</string>
     <string name="nav_exit">خروج</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -49,9 +50,17 @@
     <string name="time">زمان (دقیقه)</string>
     <string name="generate_date">تاریخ تولید</string>
     <string name="send_date">تاریخ ارسال</string>
+    <string name="manager">مدیر</string>
 
 
     <string name="select_one">انتخاب کنید...</string>
+    <string name="select_your_works">فعالیت های خود را انتخاب کنید.</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="search_bar">جستجو کنید</string>
+    <string name="submit">ارسال</string>
+
+    <string name="username">نام کاربری</string>
+    <string name="password">کلمه عبور</string>
 
 
 </resources>
