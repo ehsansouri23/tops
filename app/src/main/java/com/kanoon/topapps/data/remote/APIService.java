@@ -34,10 +34,10 @@ import retrofit2.http.Query;
 public interface APIService {
 
     @GET("GetTaskMains")
-    Call<List<TaskMain>> getTasksMain();
+    Call<List<TaskMain>> getTasksMain(@Query("token") String token);
 
     @GET("GetTaskSubLvl1")
-    Call<List<TaskSubLevel>> getTaskSubLevel(@Query("mainId") int mainId);
+    Call<List<TaskSubLevel>> getTaskSubLevel(@Query("mainId") int mainId, @Query("token") String token);
 
     /**
      * زیر فعالیت
@@ -45,45 +45,45 @@ public interface APIService {
      * @return
      */
     @GET("GetTaskTypeList")
-    Call<List<TaskTypes>> getTaskTypeList(@Query("subLevelId") int subLevelId);
+    Call<List<TaskTypes>> getTaskTypeList(@Query("subLevelId") int subLevelId, @Query("token") String token);
 
     @GET("GetTaskType")
-    Call<TaskType> getTaskType(@Query("type") int type);
+    Call<TaskType> getTaskType(@Query("type") int type, @Query("token") String token);
 
     @GET("GetGroupMains")
-    Call<List<GroupMain>> getGroupMain();
+    Call<List<GroupMain>> getGroupMain(@Query("token") String token);
 
     @GET("GetGroupCodes")
-    Call<List<GroupCode>> getGroupCode(@Query("mainCode") int mainCode);
+    Call<List<GroupCode>> getGroupCode(@Query("mainCode") int mainCode, @Query("token") String token);
 
     @GET("GetChannels")
-    Call<List<Channel>> getChannels();
+    Call<List<Channel>> getChannels(@Query("token") String token);
 
     @GET("GetTestTypes")
-    Call<List<TestType>> getTestTypes(@Query("mainCode") int groupCode);
+    Call<List<TestType>> getTestTypes(@Query("mainCode") int groupCode, @Query("token") String token);
 
     @GET("GetTaskBooks")
-    Call<List<Book>> getBooks();
+    Call<List<Book>> getBooks(@Query("token") String token);
 
     @GET("GetCategories")
-    Call<List<Category>> getCategories();
+    Call<List<Category>> getCategories(@Query("token") String token);
 
     @GET("GetLocations")
-    Call<List<Location>> getLocations();
+    Call<List<Location>> getLocations(@Query("token") String token);
 
     @GET("GetCourse")
-    Call<List<Course>> getCourses(@Query("groupCode") int groupCode);
+    Call<List<Course>> getCourses(@Query("groupCode") int groupCode, @Query("token") String token);
 
     @GET("GetTestDate")
-    Call<List<TestDate>> getTestDate(@Query("groupCode") int groupCode);
+    Call<List<TestDate>> getTestDate(@Query("groupCode") int groupCode, @Query("token") String token);
 
     @GET("LoginUser")
     Call<Login> loginUser(@Query("username") String username, @Query("password") String password);
 
     @GET("GetManagers")
-    Call<List<Managers>> getManagers();
+    Call<List<Managers>> getManagers(@Query("token") String token);
 
-    @POST("Insert?token=SM65wZG15HJUJTGN3TTcYayfFwRmHUnFuVDDbPTHiwYqoDvkqXhMcY46guMrsx%2bN%2bBFeVMZihLCdiWgVxTggo1x4DMubX5OGLq6%2bnk3%2bu0sQ0Rfa%2fqth%2fDvpx8mHFJ8O")
-    Call<Mete> insertTask(@Body Task task);
+    @POST("Insert")
+    Call<Mete> insertTask(@Query("token") String token, @Body Task task);
 
 }
