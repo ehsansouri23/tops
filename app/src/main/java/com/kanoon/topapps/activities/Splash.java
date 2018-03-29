@@ -4,10 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ImageView;
+import android.widget.Space;
 
 import com.bumptech.glide.Glide;
 import com.kanoon.topapps.R;
+import com.kanoon.topapps.configs.Prefs;
 
 public class Splash extends AppCompatActivity {
 
@@ -20,7 +23,6 @@ public class Splash extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
 
-
         kanoonLogo = (ImageView) findViewById(R.id.kanoon_splash_logo);
         Glide.with(getApplicationContext())
                 .load(R.drawable.logo)
@@ -30,8 +32,12 @@ public class Splash extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                /* Create an Intent that will start the Menu-Activity. */
-                Intent mainIntent = new Intent(Splash.this, MainActivity.class);
+                Intent mainIntent;
+                if (Prefs.getAppPrefs(getApplicationContext()).getBoolean("isNotLoggedin", true)) {
+                    mainIntent = new Intent(Splash.this, LoginActivity.class);
+                }
+                else
+                    mainIntent = new Intent(Splash.this, MainActivity.class);
                 Splash.this.startActivity(mainIntent);
                 Splash.this.finish();
             }

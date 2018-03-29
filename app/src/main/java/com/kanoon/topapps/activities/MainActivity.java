@@ -1,8 +1,12 @@
 package com.kanoon.topapps.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -11,11 +15,32 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.kanoon.topapps.R;
+import com.kanoon.topapps.configs.Prefs;
+import com.kanoon.topapps.data.model.Login;
+import com.kanoon.topapps.data.remote.APIService;
+import com.kanoon.topapps.data.remote.ApiUtils;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+
+    private View header;
+
+    private TextView nameHeader;
+    private TextView uniHeader;
+    private ImageView avatarHeader;
+
+    private SharedPreferences appPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +48,17 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        appPrefs = Prefs.getAppPrefs(getApplicationContext());
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        View header = navigationView.getHeaderView(0);
+        nameHeader = (TextView) header.findViewById(R.id.name);
+        uniHeader = (TextView) header.findViewById(R.id.university);
+        avatarHeader = (ImageView) header.findViewById(R.id.profile_avatar);
+
+        setupHeader();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -39,10 +75,12 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
 
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.mainFragment, new Activites()).commit();
     }
 
     @Override
@@ -64,8 +102,6 @@ public class MainActivity extends AppCompatActivity
             Intent i = new Intent(MainActivity.this, AddTaskActivity.class);
             startActivity(i);
         } else if (id == R.id.nav_activities) {
-            Intent i = new Intent(MainActivity.this, Activites.class);
-            startActivity(i);
 
         } else if (id == R.id.nav_setting) {
 
@@ -79,6 +115,13 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_help) {
 
+        } else if (id == R.id.nav_logout) {
+            SharedPreferences.Editor editor = appPrefs.edit();
+            editor.putBoolean("isNotLoggedin", true);
+            editor.commit();
+            Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(loginIntent);
+            finish();
         } else if (id == R.id.nav_exit) {
             finish();
         }
@@ -86,5 +129,16 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    void setupHeader() {
+        nameHeader.setText(appPrefs.getString("name", "") + " " + appPrefs.getString("lastName",""));
+        uniHeader.setText(appPrefs.getString("uni", ""));
+
+        Log.e("name", nameHeader.getText() + "");
+        Log.e("uni", uniHeader.getText() + "");
+        Glide.with(getApplicationContext())
+                .load(appPrefs.getString("avatarPath", ""))
+                .into(avatarHeader);
     }
 }
