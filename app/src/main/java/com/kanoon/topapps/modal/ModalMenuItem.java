@@ -1,4 +1,4 @@
-package com.kanoon.topapps.bottomSheet;
+package com.kanoon.topapps.modal;
 
 /**
  * Created by ehsan on 2/15/2018.
