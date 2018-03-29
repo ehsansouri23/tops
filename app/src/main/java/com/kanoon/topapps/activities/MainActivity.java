@@ -2,6 +2,7 @@ package com.kanoon.topapps.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
@@ -95,15 +96,11 @@ public class MainActivity extends AppCompatActivity
             startActivity(i);
         } else if (id == R.id.nav_activities) {
 
-        } else if (id == R.id.nav_setting) {
-
         } else if (id == R.id.nav_profile) {
 
         } else if (id == R.id.nav_aboutus) {
             Intent i = new Intent(MainActivity.this, AddTaskActivity.class);
             startActivity(i);
-
-        } else if (id == R.id.nav_contactus) {
 
         } else if (id == R.id.nav_help) {
 
@@ -124,11 +121,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     void setupHeader() {
+        nameHeader.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/sl.ttf"));
+        uniHeader.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/sl.ttf"));
         nameHeader.setText(appPrefs.getString("name", "") + " " + appPrefs.getString("lastName",""));
         uniHeader.setText(appPrefs.getString("uni", ""));
 
-        Log.e("name", nameHeader.getText() + "");
-        Log.e("uni", uniHeader.getText() + "");
         Glide.with(getApplicationContext())
                 .load(appPrefs.getString("avatarPath", ""))
                 .into(avatarHeader);

@@ -2,6 +2,7 @@ package com.kanoon.topapps.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -46,11 +47,16 @@ public class LoginActivity extends AppCompatActivity {
         appPrefsEditor = appPrefs.edit();
 
         username = (EditText) findViewById(R.id.username_edittext);
+        username.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/sl.ttf"));
         password = (EditText) findViewById(R.id.password_edittext);
+        password.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/sl.ttf"));
         inputUsename = (TextInputLayout) findViewById(R.id.input_layout_username);
         inputPassword = (TextInputLayout) findViewById(R.id.input_layout_password);
+        inputUsename.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/sl.ttf"));
+        inputPassword.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/sl.ttf"));
 
         submitButton = (Button) findViewById(R.id.submit_button);
+        submitButton.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/sl.ttf"));
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
