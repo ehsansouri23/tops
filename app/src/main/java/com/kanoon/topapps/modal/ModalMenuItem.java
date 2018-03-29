@@ -4,11 +4,11 @@ package com.kanoon.topapps.bottomSheet;
  * Created by ehsan on 2/15/2018.
  */
 
-public class BottomSheetMenuItem {
+public class ModalMenuItem {
     private String name;
     private int id;
 
-    public BottomSheetMenuItem(String name, int id) {
+    public ModalMenuItem(String name, int id) {
         this.name = name;
         this.id = id;
     }
