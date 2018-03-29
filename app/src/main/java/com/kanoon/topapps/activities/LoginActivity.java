@@ -66,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onResponse(Call<Login> call, Response<Login> response) {
                         loginInfo = response.body();
                         if (loginInfo.getStatus() == 0){
-                            appPrefsEditor.putBoolean("isNotLoggedin", false);
+                            appPrefsEditor.putBoolean("isLoggedin", true);
                             appPrefsEditor.putString("name", loginInfo.getData().getUser().getName());
                             appPrefsEditor.putString("lastName", loginInfo.getData().getUser().getLastName());
                             appPrefsEditor.putString("uni", loginInfo.getData().getUser().getAuxCourseUni());

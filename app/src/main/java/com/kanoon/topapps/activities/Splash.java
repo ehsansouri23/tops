@@ -33,7 +33,7 @@ public class Splash extends AppCompatActivity {
             @Override
             public void run() {
                 Intent mainIntent;
-                if (Prefs.getAppPrefs(getApplicationContext()).getBoolean("isNotLoggedin", true)) {
+                if (!Prefs.getAppPrefs(getApplicationContext()).getBoolean("isLoggedin", false)) {
                     mainIntent = new Intent(Splash.this, LoginActivity.class);
                 }
                 else
