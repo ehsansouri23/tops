@@ -21,54 +21,36 @@
             android:textColor="@color/darkColor"
             android:textSize="25dp" />
 
+        <TextView
+            android:id="@+id/university"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/name"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="3dp"
+            android:textColor="@color/darkColor"
+            android:textSize="15dp" />
+
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profile_avatar"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_below="@id/name"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:layout_below="@id/university"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="5dp"
-            android:src="@mipmap/ic_launcher" />
+            android:layout_marginTop="7dp"
+            android:src="@mipmap/ic_launcher"
+            app:civ_border_color="@color/colorPrimary"
+            app:civ_border_width="2dp" />
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/profile_avatar"
-            android:layout_marginRight="20dp">
-
-            <TextView
-                android:id="@+id/national_code_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:text="@string/national_code"
-                android:textColor="@color/colorAccent"
-                android:textDirection="rtl"
-                android:textStyle="bold"
-                android:textSize="20dp"/>
-
-            <TextView
-                android:id="@+id/national_code"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_below="@id/national_code_title"
-                android:layout_marginTop="7dp"
-                android:textSize="18dp" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_below="@id/profile_avatar"
-            android:layout_marginLeft="20dp">
+            android:layout_marginRight="20dp">
 
             <TextView
                 android:id="@+id/mobile_number_title"
@@ -77,8 +59,9 @@
                 android:text="@string/mobile_number"
                 android:textColor="@color/colorAccent"
                 android:textDirection="rtl"
+                android:textSize="20dp"
                 android:textStyle="bold"
-                android:textSize="20dp"/>
+                android:visibility="invisible" />
 
             <TextView
                 android:id="@+id/mobile_number"
@@ -86,10 +69,99 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/mobile_number_title"
                 android:layout_marginTop="7dp"
-                android:textSize="18dp" />
+                android:textSize="18dp"
+                android:visibility="invisible" />
 
         </RelativeLayout>
 
+        <RelativeLayout
+            android:id="@+id/national"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/profile_avatar"
+            android:layout_marginLeft="20dp">
+
+            <TextView
+                android:id="@+id/national_code_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/national_code"
+                android:textColor="@color/colorAccent"
+                android:textDirection="rtl"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/national_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/national_code_title"
+                android:layout_marginTop="7dp"
+                android:textSize="18dp"
+                android:visibility="invisible" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/email_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/national"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="7dp">
+
+            <TextView
+                android:id="@+id/email_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="@string/email"
+                android:textColor="@color/colorAccent"
+                android:textDirection="rtl"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/email_title"
+                android:layout_marginTop="7dp"
+                android:textSize="18dp"
+                android:visibility="invisible" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/email_layout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/ic_identity"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginRight="20dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/ic_identity" />
+
+            <ImageView
+                android:id="@+id/ic_result"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/ic_reslult" />
+
+        </LinearLayout>
 
     </RelativeLayout>
 
