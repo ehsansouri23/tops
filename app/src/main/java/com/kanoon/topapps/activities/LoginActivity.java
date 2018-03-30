@@ -73,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
                             appPrefsEditor.putString(Prefs.PREF_MOBILE_NUMBER, loginInfo.getData().getUser().getMobile());
                             appPrefsEditor.putString(Prefs.PREF_EMAIL, loginInfo.getData().getUser().getEmail());
                             appPrefsEditor.putString(Prefs.PREF_IDENTITY_PIC, "http://insp.kanoon.ir/Top/File/ShowIdCard?file=" + loginInfo.getData().getUser().getIdCardPic());
-                            appPrefsEditor.putString(Prefs.PREF_RESULT_PIC, loginInfo.getData().getUser().getResultPic());
+                            appPrefsEditor.putString(Prefs.PREF_RESULT_PIC, "http://insp.kanoon.ir/Top/File/ShowResultPic?file=" + loginInfo.getData().getUser().getResultPic());
                             appPrefsEditor.putString(Prefs.PREF_TOKEN, loginInfo.getData().getToken());
                             appPrefsEditor.commit();
                             Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);

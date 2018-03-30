@@ -13,7 +13,9 @@
     <android.support.design.widget.TextInputLayout
         android:id="@+id/input_layout_username"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginRight="50dp"
+        android:layout_marginLeft="50dp">
         
         <EditText
             android:id="@+id/username_edittext"
@@ -26,7 +28,10 @@
     <android.support.design.widget.TextInputLayout
         android:id="@+id/input_layout_password"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginRight="50dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="20dp">
 
         <EditText
             android:id="@+id/password_edittext"
@@ -41,6 +46,9 @@
         android:id="@+id/submit_button"
         android:layout_width="70dp"
         android:layout_height="wrap_content"
-        android:text="@string/login"/>
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:text="@string/login" />
 
 </LinearLayout>

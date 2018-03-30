@@ -1,57 +1,30 @@
 package com.kanoon.topapps.activities;
 
-import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.Toast;
+import android.widget.TextView;
 
-import com.kanoon.topapps.IdAndValue;
-import com.kanoon.topapps.Mete;
 import com.kanoon.topapps.R;
 import com.kanoon.topapps.adapter.MenuListAdapter;
-import com.kanoon.topapps.configs.Prefs;
-import com.kanoon.topapps.consts.Labels;
 import com.kanoon.topapps.consts.State;
 import com.kanoon.topapps.consts.Types;
-import com.kanoon.topapps.data.model.Book;
-import com.kanoon.topapps.data.model.Category;
-import com.kanoon.topapps.data.model.Channel;
-import com.kanoon.topapps.data.model.Course;
-import com.kanoon.topapps.data.model.GroupCode;
-import com.kanoon.topapps.data.model.GroupMain;
-import com.kanoon.topapps.data.model.Location;
-import com.kanoon.topapps.data.model.Managers;
 import com.kanoon.topapps.data.model.Task;
-import com.kanoon.topapps.data.model.TaskMain;
-import com.kanoon.topapps.data.model.TaskSubLevel;
 import com.kanoon.topapps.data.model.TaskType;
-import com.kanoon.topapps.data.model.TaskTypes;
-import com.kanoon.topapps.data.model.TestDate;
-import com.kanoon.topapps.data.model.TestType;
 import com.kanoon.topapps.data.remote.APIService;
 import com.kanoon.topapps.data.remote.ApiUtils;
-import com.kanoon.topapps.edit_text_dialog.EditTextDialog;
 import com.kanoon.topapps.menu_item.MainMenuItem;
-//import com.kanoon.topapps.modal.MenuDialogFragment;
+import com.kanoon.topapps.modal.ModalDialog;
 import com.kanoon.topapps.modal.ModalMenuItem;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 public class AddTaskActivity extends AppCompatActivity {
@@ -63,8 +36,10 @@ public class AddTaskActivity extends AppCompatActivity {
     private MenuListAdapter menuListAdapter;
     private List<MainMenuItem> menuItemList;
 
+    private TextView chooseTextView;
+
 //    private List<ModalMenuItem> modalMenuItemList;
-//    private MenuDialogFragment modalDialog;
+//    private ModalDialog modalDialog;
 
 //    private EditTextDialog editTextDialog;
 //    private Button submitButton;
@@ -84,17 +59,12 @@ public class AddTaskActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Make us non-modal, so that others can receive touch events.
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL, WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
-
-        // ...but notify us that it happened.
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH, WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH);
-
-
         setContentView(R.layout.activity_add);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        setupMenuRecyclerViewAndTitle();
+
+
         task = new Task();
 //        stateList = new ArrayList<>();
 //        stateList.add(State.STATE_TASKS_MAIN);
@@ -135,10 +105,9 @@ public class AddTaskActivity extends AppCompatActivity {
 //        editTextDialog = new EditTextDialog(AddTaskActivity.this);
 
         //setting up menu list
-        setupMenuRecyclerView();
 
 //        modalMenuItemList = new ArrayList<>();
-//        modalDialog = new MenuDialogFragment(Labels.getLabel(getApplicationContext(), State.STATE_TASKS_MAIN), modalMenuItemList, AddTaskActivity.this);
+//        modalDialog = new ModalDialog(Labels.getLabel(getApplicationContext(), State.STATE_TASKS_MAIN), modalMenuItemList, AddTaskActivity.this);
 //        modalDialog.show(getSupportFragmentManager(), "TAG");
 //        getModalMenuItemList(curState);
 
@@ -504,12 +473,11 @@ public class AddTaskActivity extends AppCompatActivity {
 //        else return false;
 //    }
 
-    private void setupMenuRecyclerView() {
+    private void setupMenuRecyclerViewAndTitle() {
+        chooseTextView = (TextView) findViewById(R.id.choose_title);
+        chooseTextView.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/sl.ttf"));
         menuItemList = new ArrayList<>();
         menuItemList.add(new MainMenuItem(State.STATE_TASKS_MAIN));
-        MainMenuItem mainMenuItem = new MainMenuItem(State.STATE_TASK_SUBLEVEL);
-        mainMenuItem.setDone(true);
-        menuItemList.add(mainMenuItem);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         menuRecyclerView = (RecyclerView) findViewById(R.id.menu_list);
@@ -517,6 +485,38 @@ public class AddTaskActivity extends AppCompatActivity {
         menuListAdapter = new MenuListAdapter(menuItemList, AddTaskActivity.this);
         menuRecyclerView.setAdapter(menuListAdapter);
         menuRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+
+        List<ModalMenuItem> modalMenuItemList = new ArrayList<>();
+        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
+        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
+        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
+        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
+        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
+        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
+        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
+        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
+        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
+        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
+        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
+        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
+        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
+        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
+        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
+        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
+        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
+        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
+        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
+        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
+        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
+        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
+        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
+        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
+        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
+        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
+
+        ModalDialog dialog = new ModalDialog("تایتل",modalMenuItemList, AddTaskActivity.this);
+        dialog.show();
     }
 
 //    private void writeToClass() {
