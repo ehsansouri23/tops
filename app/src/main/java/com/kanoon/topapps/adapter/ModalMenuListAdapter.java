@@ -3,15 +3,18 @@ package com.kanoon.topapps.adapter;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
 import android.widget.TextView;
 
 import com.kanoon.topapps.R;
 import com.kanoon.topapps.activities.AddTaskActivity;
 import com.kanoon.topapps.modal.ModalMenuItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,10 +24,12 @@ import java.util.List;
 public class ModalMenuListAdapter extends RecyclerView.Adapter<ModalMenuListAdapter.ViewHolder> {
 
     private List<ModalMenuItem> modalMenuItemList;
+    private List<ModalMenuItem> filteredModalMenuItemList;
     private AddTaskActivity activity;
 
     public ModalMenuListAdapter(List<ModalMenuItem> modalMenuItemList, AddTaskActivity activity) {
         this.modalMenuItemList = modalMenuItemList;
+        this.filteredModalMenuItemList = modalMenuItemList;
         this.activity = activity;
     }
 
@@ -48,19 +53,19 @@ public class ModalMenuListAdapter extends RecyclerView.Adapter<ModalMenuListAdap
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        holder.item.setTypeface(Typeface.createFromAsset(activity.getAssets(),"fonts/sl.ttf"));
-        holder.item.setText(modalMenuItemList.get(position).getName());
+        holder.item.setTypeface(Typeface.createFromAsset(activity.getAssets(), "fonts/sl.ttf"));
+        holder.item.setText(filteredModalMenuItemList.get(position).getName());
         holder.item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                activity.onModalMenuItemClicked(modalMenuItemList.get(position).getId(), modalMenuItemList.get(position).getName());
+                activity.onModalMenuItemClicked(filteredModalMenuItemList.get(position).getId(), filteredModalMenuItemList.get(position).getName());
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return modalMenuItemList.size();
+        return filteredModalMenuItemList.size();
     }
 
     public List<ModalMenuItem> getModalMenuItemList() {
@@ -69,5 +74,37 @@ public class ModalMenuListAdapter extends RecyclerView.Adapter<ModalMenuListAdap
 
     public void setModalMenuItemList(List<ModalMenuItem> modalMenuItemList) {
         this.modalMenuItemList = modalMenuItemList;
+    }
+
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String s = charSequence.toString();
+                if (s.isEmpty()) {
+                    filteredModalMenuItemList = modalMenuItemList;
+                } else {
+                    List<ModalMenuItem> list = new ArrayList<>();
+                    for (ModalMenuItem item :
+                            modalMenuItemList) {
+                        if (item.getName().contains(s))
+                            list.add(item);
+                    }
+                    filteredModalMenuItemList = list;
+                    for (int i = 0; i < filteredModalMenuItemList.size(); i++) {
+                        Log.e("tage", "performFiltering: name = " + filteredModalMenuItemList.get(i).getName() + " id = " + filteredModalMenuItemList.get(i).getId());
+                    }
+                }
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = filteredModalMenuItemList;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                filteredModalMenuItemList = (List<ModalMenuItem>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 }

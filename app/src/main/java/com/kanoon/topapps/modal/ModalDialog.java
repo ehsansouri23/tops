@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Display;
 import android.view.View;
 import android.view.Window;
@@ -120,28 +122,26 @@ public class ModalDialog extends Dialog {
             enterValue.setTypeface(Typeface.createFromAsset(activity.getAssets(), "fonts/sl.ttf"));
             submit.setTypeface(Typeface.createFromAsset(activity.getAssets(), "fonts/sl.ttf"));
         }
+
+
+        searchBar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                adapter.getFilter().filter(searchBar.getText());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
+
     }
 
 
-//        searchBar.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//                adapter.getFilter().filter(searchBar.getText());
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable editable) {
-//
-//            }
-//        });
-//
-//        return v;
-//    }
 
 
     public void reload(String title, List<ModalMenuItem> modalMenuItemList) {

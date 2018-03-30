@@ -7,16 +7,34 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.kanoon.topapps.IdAndValue;
 import com.kanoon.topapps.R;
 import com.kanoon.topapps.adapter.MenuListAdapter;
+import com.kanoon.topapps.configs.Prefs;
+import com.kanoon.topapps.consts.Labels;
 import com.kanoon.topapps.consts.State;
 import com.kanoon.topapps.consts.Types;
+import com.kanoon.topapps.data.model.Book;
+import com.kanoon.topapps.data.model.Category;
+import com.kanoon.topapps.data.model.Channel;
+import com.kanoon.topapps.data.model.Course;
+import com.kanoon.topapps.data.model.GroupCode;
+import com.kanoon.topapps.data.model.GroupMain;
+import com.kanoon.topapps.data.model.Location;
+import com.kanoon.topapps.data.model.Managers;
 import com.kanoon.topapps.data.model.Task;
+import com.kanoon.topapps.data.model.TaskMain;
+import com.kanoon.topapps.data.model.TaskSubLevel;
 import com.kanoon.topapps.data.model.TaskType;
+import com.kanoon.topapps.data.model.TaskTypes;
+import com.kanoon.topapps.data.model.TestDate;
+import com.kanoon.topapps.data.model.TestType;
 import com.kanoon.topapps.data.remote.APIService;
 import com.kanoon.topapps.data.remote.ApiUtils;
 import com.kanoon.topapps.menu_item.MainMenuItem;
@@ -24,7 +42,12 @@ import com.kanoon.topapps.modal.ModalDialog;
 import com.kanoon.topapps.modal.ModalMenuItem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class AddTaskActivity extends AppCompatActivity {
@@ -35,25 +58,26 @@ public class AddTaskActivity extends AppCompatActivity {
     private RecyclerView menuRecyclerView;
     private MenuListAdapter menuListAdapter;
     private List<MainMenuItem> menuItemList;
+    private List<ModalMenuItem> modalMenuItemList;
+    private ModalDialog modalDialog;
+    private HashMap<Integer, IdAndValue> stateAndId;
 
     private TextView chooseTextView;
 
-//    private List<ModalMenuItem> modalMenuItemList;
-//    private ModalDialog modalDialog;
+    private String token;
 
-//    private EditTextDialog editTextDialog;
+    //    private EditTextDialog editTextDialog;
+    private int position;
+    private int currentState;
+
 //    private Button submitButton;
 
     private TaskType taskType;
 
-//    private HashMap<Integer, IdAndValue> stateAndId;
-
     private Task task;
 
 
-    private int curState;
-//    private int id;
-//    private int position;
+    //    private int id;
 //    private List<Integer> stateList;
 
     @Override
@@ -62,17 +86,29 @@ public class AddTaskActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        apiService = ApiUtils.getAPIService();
+        stateAndId = new HashMap<>();
+        modalMenuItemList = new ArrayList<>();
+        taskType = new TaskType();
+        task = new Task();
+
+        token = Prefs.getAppPrefs(getApplicationContext()).getString(Prefs.PREF_TOKEN, "");
         setupMenuRecyclerViewAndTitle();
 
+        currentState = State.STATE_TASKS_MAIN;
+        position = 0;
 
-        task = new Task();
+        modalDialog = new ModalDialog("", modalMenuItemList, AddTaskActivity.this);
+        modalDialog.show();
+        getModalMenuItemList(currentState);
+
+
 //        stateList = new ArrayList<>();
 //        stateList.add(State.STATE_TASKS_MAIN);
 
 //        SharedPreferences appPrefs = Prefs.getAppPrefs(getApplicationContext());
 //        String token = appPrefs.getString()
 
-        apiService = ApiUtils.getAPIService();
 //        stateAndId = new HashMap<>();
 
 //        submitButton = (Button) findViewById(R.id.submit_button);
@@ -94,12 +130,11 @@ public class AddTaskActivity extends AppCompatActivity {
 //            }
 //        });
 
-        taskType = new TaskType();
 
         //at first
 //        id = -1;
-        curState = State.STATE_TASKS_MAIN;
-//        stateAndId.put(curState, new IdAndValue(0,""));
+        currentState = State.STATE_TASKS_MAIN;
+//        stateAndId.put(currentState, new IdAndValue(0,""));
 
 
 //        editTextDialog = new EditTextDialog(AddTaskActivity.this);
@@ -109,7 +144,7 @@ public class AddTaskActivity extends AppCompatActivity {
 //        modalMenuItemList = new ArrayList<>();
 //        modalDialog = new ModalDialog(Labels.getLabel(getApplicationContext(), State.STATE_TASKS_MAIN), modalMenuItemList, AddTaskActivity.this);
 //        modalDialog.show(getSupportFragmentManager(), "TAG");
-//        getModalMenuItemList(curState);
+//        getModalMenuItemList(currentState);
 
     }
 
@@ -130,7 +165,7 @@ public class AddTaskActivity extends AppCompatActivity {
     }
 
     public void onMenuItemClicked(int menuItemState, int menuItemType, int position) {
-        curState = menuItemState;
+        currentState = menuItemState;
 //        this.position = position;
 
         if (menuItemType == Types.TYPE_OPTION) {
@@ -140,335 +175,355 @@ public class AddTaskActivity extends AppCompatActivity {
         if (menuItemType == Types.TYPE_INPUT) {
 //            this.position = position;
 //            String title = Labels.getLabel(getApplicationContext(), menuItemState);
-//            editTextDialog.showDialog(title, curState);
+//            editTextDialog.showDialog(title, currentState);
         }
 //        if (isFinished())
 //            submitButton.setVisibility(View.VISIBLE);
 
     }
 
-//    public void onModalMenuItemClicked(final int id, String name) {
-//        stateList.add(curState);
-//        stateAndId.put(curState, new IdAndValue(id, name));
+    public void onModalMenuItemClicked(final int id, String name) {
+        stateAndId.put(currentState, new IdAndValue(id, name));
+        menuItemList.get(position).setDone(true);
+        menuItemList.get(position).setChosen(name);
+        menuListAdapter.notifyItemChanged(position);
+        position++;
+        if (currentState == State.STATE_TASK_SUBLEVEL) {
+            apiService.getTaskType(id, token).enqueue(new Callback<TaskType>() {
+                @Override
+                public void onResponse(Call<TaskType> call, Response<TaskType> response) {
+                    taskType = response.body();
+                }
+
+                @Override
+                public void onFailure(Call<TaskType> call, Throwable t) {
+                    connectionError();
+                }
+            });
+        }
+        currentState = taskType.getNextState(currentState);
+        menuItemList.add(new MainMenuItem(currentState));
+        getModalMenuItemList(currentState);
+        menuListAdapter.notifyItemInserted(position);
+        menuRecyclerView.smoothScrollToPosition(position);
+
 //        menuItemList.get(position).setChosen(name);
 //        position++;
 //        final int[] newState = new int[1];
-////        if (name.equals("کانال تلگرام")) {
-////            newState[0] = State.STATE_CHANNEL_ID;
-////            curState = newState[0];
-////            if (curState <= State.STATE_CATEGORY) {
-////                getModalMenuItemList(curState);
-////                modalDialog.reload(Labels.getLabel(getApplicationContext(), curState), modalMenuItemList);
-////            } else {
-////                modalDialog.dismiss();
-////                editTextDialog.showDialog(Labels.getLabel(getApplicationContext(), curState), curState);
-////            }
-////        }
-////        else {
-//        if (curState == State.STATE_TASK_TYPE) {
+//        if (name.equals("کانال تلگرام")) {
+//            newState[0] = State.STATE_CHANNEL_ID;
+//            currentState = newState[0];
+//            if (currentState <= State.STATE_CATEGORY) {
+//                getModalMenuItemList(currentState);
+//                modalDialog.reload(Labels.getLabel(getApplicationContext(), currentState), modalMenuItemList);
+//            } else {
+//                modalDialog.dismiss();
+//                editTextDialog.showDialog(Labels.getLabel(getApplicationContext(), currentState), currentState);
+//            }
+//        }
+//        else {
+//        if (currentState == State.STATE_TASK_TYPE) {
 //            apiService.getTaskType(id).enqueue(new Callback<TaskType>() {
 //                @Override
 //                public void onResponse(Call<TaskType> call, Response<TaskType> response) {
 //                    taskType = response.body();
-//                    newState[0] = taskType.getNextState(curState);
+//                    newState[0] = taskType.getNextState(currentState);
 //                    menuItemList.add(new MainMenuItem(newState[0]));
 //                    menuListAdapter.notifyDataSetChanged();
 //
-//                    curState = newState[0];
-//                    if (curState <= State.STATE_CATEGORY) {
-////                        getModalMenuItemList(curState);
-////                        modalDialog.reload(Labels.getLabel(getApplicationContext(), curState), modalMenuItemList);
+//                    currentState = newState[0];
+//                    if (currentState <= State.STATE_CATEGORY) {
+////                        getModalMenuItemList(currentState);
+////                        modalDialog.reload(Labels.getLabel(getApplicationContext(), currentState), modalMenuItemList);
 //                    } else {
 ////                        modalDialog.dismiss();
-//                        editTextDialog.showDialog(Labels.getLabel(getApplicationContext(), curState), curState);
 //                    }
 //
 //                }
 //
 //                @Override
 //                public void onFailure(Call<TaskType> call, Throwable t) {
-//                    Toast.makeText(getApplicationContext(), "اتصال برقرار نیست", Toast.LENGTH_SHORT).show();
+//                    connectionError();
 //                }
 //            });
 //        } else {
-//            newState[0] = taskType.getNextState(curState);
+//            newState[0] = taskType.getNextState(currentState);
 //
 //            menuItemList.add(new MainMenuItem(newState[0]));
 //            menuListAdapter.notifyDataSetChanged();
 //
-//            curState = newState[0];
-//            if (curState <= State.STATE_CATEGORY) {
-////                getModalMenuItemList(curState);
-////                modalDialog.reload(Labels.getLabel(getApplicationContext(), curState), modalMenuItemList);
+//            currentState = newState[0];
+//            if (currentState <= State.STATE_CATEGORY) {
+////                getModalMenuItemList(currentState);
+////                modalDialog.reload(Labels.getLabel(getApplicationContext(), currentState), modalMenuItemList);
 //            } else {
 ////                modalDialog.dismiss();
-//                editTextDialog.showDialog(Labels.getLabel(getApplicationContext(), curState), curState);
 //            }
 //        }
-////        }
+    }
+//        }
 //        if (isFinished())
 //            submitButton.setVisibility(View.VISIBLE);
 //    }
 
 //    public void onEditTextDialogClosed(String chosen) {
-//        stateList.add(curState);
-//        stateAndId.put(curState, new IdAndValue(-1, chosen));
+//        stateList.add(currentState);
+//        stateAndId.put(currentState, new IdAndValue(-1, chosen));
 //        menuItemList.get(position).setChosen(chosen);
 //        menuListAdapter.notifyDataSetChanged();
 //        position++;
-//        int newState = taskType.getNextState(curState);
-//        curState = newState;
+//        int newState = taskType.getNextState(currentState);
+//        currentState = newState;
 //        if (isFinished()) {
 //            submitButton.setVisibility(View.VISIBLE);
 //        } else {
 //            menuItemList.add(new MainMenuItem(newState));
 //            menuListAdapter.notifyDataSetChanged();
-//            editTextDialog.showDialog(Labels.getLabel(getApplicationContext(), curState), curState);
+//            editTextDialog.showDialog(Labels.getLabel(getApplicationContext(), currentState), currentState);
 //        }
 //
 //    }
 
-//    private void getModalMenuItemList(int state) {
-//
-//        switch (state) {
-//            case State.STATE_TASKS_MAIN:
-//                apiService.getTasksMain().enqueue(new Callback<List<TaskMain>>() {
-//                    @Override
-//                    public void onResponse(Call<List<TaskMain>> call, Response<List<TaskMain>> response) {
-//                        modalMenuItemList.removeAll(modalMenuItemList);
-//                        for (int i = 0; i < response.body().size(); i++) {
-//                            modalMenuItemList.add(new ModalMenuItem(response.body().get(i).getMainName(), response.body().get(i).getMainId()));
-//                        }
-////                        modalDialog.reload(Labels.getLabel(getApplicationContext(), curState), modalMenuItemList);
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<List<TaskMain>> call, Throwable t) {
-//                        Toast.makeText(getApplicationContext(), "اتصال برقرار نیست", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//                break;
-//
-//            case State.STATE_TASK_SUBLEVEL:
-//                apiService.getTaskSubLevel(stateAndId.get(State.STATE_TASKS_MAIN).getId()).enqueue(new Callback<List<TaskSubLevel>>() {
-//                    @Override
-//                    public void onResponse(Call<List<TaskSubLevel>> call, Response<List<TaskSubLevel>> response) {
-//                        modalMenuItemList.removeAll(modalMenuItemList);
-//                        for (int i = 0; i < response.body().size(); i++) {
-//                            modalMenuItemList.add(new ModalMenuItem(response.body().get(i).getSubLevelName(), response.body().get(i).getSubLevelId()));
-//                        }
-//                        modalDialog.reload(Labels.getLabel(getApplicationContext(), curState), modalMenuItemList);
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<List<TaskSubLevel>> call, Throwable t) {
-//                        Toast.makeText(getApplicationContext(), "اتصال برقرار نیست", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//                break;
-//
-//            case State.STATE_TASK_TYPE:
-//                apiService.getTaskTypeList(stateAndId.get(State.STATE_TASK_SUBLEVEL).getId()).enqueue(new Callback<List<TaskTypes>>() {
-//                    @Override
-//                    public void onResponse(Call<List<TaskTypes>> call, Response<List<TaskTypes>> response) {
-//                        modalMenuItemList.removeAll(modalMenuItemList);
-//                        for (int i = 0; i < response.body().size(); i++) {
-//                            modalMenuItemList.add(new ModalMenuItem(response.body().get(i).getTypeName(), response.body().get(i).getTypeId()));
-//                        }
-//                        modalDialog.reload(Labels.getLabel(getApplicationContext(), curState), modalMenuItemList);
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<List<TaskTypes>> call, Throwable t) {
-//                        Toast.makeText(getApplicationContext(), "اتصال برقرار نیست", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//                break;
-//
-//            case State.STATE_GROUP_MAIN_CODE:
-//                apiService.getGroupMain().enqueue(new Callback<List<GroupMain>>() {
-//                    @Override
-//                    public void onResponse(Call<List<GroupMain>> call, Response<List<GroupMain>> response) {
-//                        modalMenuItemList.removeAll(modalMenuItemList);
-//                        for (int i = 0; i < response.body().size(); i++) {
-//                            modalMenuItemList.add(new ModalMenuItem(response.body().get(i).getMainName(), response.body().get(i).getMainCode()));
-//                        }
-//                        modalDialog.reload(Labels.getLabel(getApplicationContext(), curState), modalMenuItemList);
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<List<GroupMain>> call, Throwable t) {
-//                        Toast.makeText(getApplicationContext(), "اتصال برقرار نیست", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//                break;
-//
-//            case State.STATE_GROUP_CODE:
-//                apiService.getGroupCode(stateAndId.get(State.STATE_GROUP_MAIN_CODE).getId()).enqueue(new Callback<List<GroupCode>>() {
-//                    @Override
-//                    public void onResponse(Call<List<GroupCode>> call, Response<List<GroupCode>> response) {
-//                        modalMenuItemList.removeAll(modalMenuItemList);
-//                        for (int i = 0; i < response.body().size(); i++) {
-//                            modalMenuItemList.add(new ModalMenuItem(response.body().get(i).getGroupName(), response.body().get(i).getGroupCode1()));
-//                        }
-//                        modalDialog.reload(Labels.getLabel(getApplicationContext(), curState), modalMenuItemList);
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<List<GroupCode>> call, Throwable t) {
-//                        Toast.makeText(getApplicationContext(), "اتصال برقرار نیست", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//                break;
-//
-//            case State.STATE_COURSE_ID:
-//                apiService.getCourses(stateAndId.get(State.STATE_GROUP_CODE).getId()).enqueue(new Callback<List<Course>>() {
-//                    @Override
-//                    public void onResponse(Call<List<Course>> call, Response<List<Course>> response) {
-//                        modalMenuItemList.removeAll(modalMenuItemList);
-//                        for (int i = 0; i < response.body().size(); i++) {
-//                            modalMenuItemList.add(new ModalMenuItem(response.body().get(i).getCourseName(), response.body().get(i).getCourseId()));
-//                        }
-//                        modalDialog.reload(Labels.getLabel(getApplicationContext(), curState), modalMenuItemList);
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<List<Course>> call, Throwable t) {
-//                        Toast.makeText(getApplicationContext(), "اتصال برقرار نیست", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//                break;
-//
-//            case State.STATE_TEST_DATE:
-//                apiService.getTestDate(stateAndId.get(State.STATE_GROUP_CODE).getId()).enqueue(new Callback<List<TestDate>>() {
-//                    @Override
-//                    public void onResponse(Call<List<TestDate>> call, Response<List<TestDate>> response) {
-//                        modalMenuItemList.removeAll(modalMenuItemList);
-//                        for (int i = 0; i < response.body().size(); i++) {
-//                            modalMenuItemList.add(new ModalMenuItem(response.body().get(i).getHejri(), response.body().get(i).getDateValue()));
-//                        }
-//                        modalDialog.reload(Labels.getLabel(getApplicationContext(), curState), modalMenuItemList);
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<List<TestDate>> call, Throwable t) {
-//                        Toast.makeText(getApplicationContext(), "اتصال برقرار نیست", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//                break;
-//
-//            case State.STATE_BOOKS:
-//                apiService.getBooks().enqueue(new Callback<List<Book>>() {
-//                    @Override
-//                    public void onResponse(Call<List<Book>> call, Response<List<Book>> response) {
-//                        modalMenuItemList.removeAll(modalMenuItemList);
-//                        for (int i = 0; i < response.body().size(); i++) {
-//                            modalMenuItemList.add(new ModalMenuItem(response.body().get(i).getBookName(), response.body().get(i).getId()));
-//                        }
-//                        modalDialog.reload(Labels.getLabel(getApplicationContext(), curState), modalMenuItemList);
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<List<Book>> call, Throwable t) {
-//                        Toast.makeText(getApplicationContext(), "اتصال برقرار نیست", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//                break;
-//
-//            case State.STATE_LOCATION:
-//                apiService.getLocations().enqueue(new Callback<List<Location>>() {
-//                    @Override
-//                    public void onResponse(Call<List<Location>> call, Response<List<Location>> response) {
-//                        modalMenuItemList.removeAll(modalMenuItemList);
-//                        for (int i = 0; i < response.body().size(); i++) {
-//                            modalMenuItemList.add(new ModalMenuItem(response.body().get(i).getLocationName(), response.body().get(i).getLocationId()));
-//                        }
-//                        modalDialog.reload(Labels.getLabel(getApplicationContext(), curState), modalMenuItemList);
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<List<Location>> call, Throwable t) {
-//                        Toast.makeText(getApplicationContext(), "اتصال برقرار نیست", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//                break;
-//
-//            case State.STATE_CHANNEL_ID:
-//                apiService.getChannels().enqueue(new Callback<List<Channel>>() {
-//                    @Override
-//                    public void onResponse(Call<List<Channel>> call, Response<List<Channel>> response) {
-//                        modalMenuItemList.removeAll(modalMenuItemList);
-//                        for (int i = 0; i < response.body().size(); i++) {
-//                            modalMenuItemList.add(new ModalMenuItem(response.body().get(i).getChanneName(), response.body().get(i).getChanneId()));
-//                        }
-//                        modalDialog.reload(Labels.getLabel(getApplicationContext(), curState), modalMenuItemList);
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<List<Channel>> call, Throwable t) {
-//                        Toast.makeText(getApplicationContext(), "اتصال برقرار نیست", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//                break;
-//
-//            case State.STATE_TEST_TYPE:
-//                apiService.getTestTypes(stateAndId.get(State.STATE_GROUP_MAIN_CODE).getId()).enqueue(new Callback<List<TestType>>() {
-//                    @Override
-//                    public void onResponse(Call<List<TestType>> call, Response<List<TestType>> response) {
-//                        modalMenuItemList.removeAll(modalMenuItemList);
-//                        for (int i = 0; i < response.body().size(); i++) {
-//                            modalMenuItemList.add(new ModalMenuItem(response.body().get(i).getTestTypeName(), response.body().get(i).getTestTypeId()));
-//                        }
-//                        modalDialog.reload(Labels.getLabel(getApplicationContext(), curState), modalMenuItemList);
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<List<TestType>> call, Throwable t) {
-//                        Toast.makeText(getApplicationContext(), "اتصال برقرار نیست", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//                break;
-//
-//            case State.STATE_CATEGORY:
-//                apiService.getCategories().enqueue(new Callback<List<Category>>() {
-//                    @Override
-//                    public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
-//                        modalMenuItemList.removeAll(modalMenuItemList);
-//                        for (int i = 0; i < response.body().size(); i++) {
-//                            modalMenuItemList.add(new ModalMenuItem(response.body().get(i).getCatagoryName(), response.body().get(i).getCatagoryId()));
-//                        }
-//                        modalDialog.reload(Labels.getLabel(getApplicationContext(), curState), modalMenuItemList);
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<List<Category>> call, Throwable t) {
-//                        Toast.makeText(getApplicationContext(), "اتصال برقرار نیست", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//                break;
-//            case State.STATE_MANAGER_USER_ID:
-//                apiService.getManagers().enqueue(new Callback<List<Managers>>() {
-//                    @Override
-//                    public void onResponse(Call<List<Managers>> call, Response<List<Managers>> response) {
-//                        modalMenuItemList.removeAll(modalMenuItemList);
-//                        for (int i = 0; i < response.body().size(); i++) {
-//                            modalMenuItemList.add(new ModalMenuItem(response.body().get(i).getFullname(), response.body().get(i).getUserId()));
-//                        }
-//                        modalDialog.reload(Labels.getLabel(getApplicationContext(), curState), modalMenuItemList);
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<List<Managers>> call, Throwable t) {
-//                        Toast.makeText(getApplicationContext(), "اتصال برقرار نیست", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//            default:
-//                break;
-//        }
-//    }
+    private void getModalMenuItemList(int state) {
+        switch (state) {
+            case State.STATE_TASKS_MAIN:
+                apiService.getTasksMain(token).enqueue(new Callback<List<TaskMain>>() {
+                    @Override
+                    public void onResponse(Call<List<TaskMain>> call, Response<List<TaskMain>> response) {
+                        modalMenuItemList.removeAll(modalMenuItemList);
+                        for (int i = 0; i < response.body().size(); i++) {
+                            modalMenuItemList.add(new ModalMenuItem(response.body().get(i).getMainName(), response.body().get(i).getMainId()));
+                        }
+                        modalDialog.reload(Labels.getLabel(getApplicationContext(), currentState), modalMenuItemList);
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<TaskMain>> call, Throwable t) {
+                        connectionError();
+                    }
+                });
+                break;
+
+            case State.STATE_TASK_SUBLEVEL:
+                apiService.getTaskSubLevel(stateAndId.get(State.STATE_TASKS_MAIN).getId(), token).enqueue(new Callback<List<TaskSubLevel>>() {
+                    @Override
+                    public void onResponse(Call<List<TaskSubLevel>> call, Response<List<TaskSubLevel>> response) {
+                        modalMenuItemList.removeAll(modalMenuItemList);
+                        for (int i = 0; i < response.body().size(); i++) {
+                            modalMenuItemList.add(new ModalMenuItem(response.body().get(i).getSubLevelName(), response.body().get(i).getSubLevelId()));
+                        }
+                        modalDialog.reload(Labels.getLabel(getApplicationContext(), currentState), modalMenuItemList);
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<TaskSubLevel>> call, Throwable t) {
+                        connectionError();
+                    }
+                });
+                break;
+
+            case State.STATE_TASK_TYPE:
+                apiService.getTaskTypeList(stateAndId.get(State.STATE_TASK_SUBLEVEL).getId(), token).enqueue(new Callback<List<TaskTypes>>() {
+                    @Override
+                    public void onResponse(Call<List<TaskTypes>> call, Response<List<TaskTypes>> response) {
+                        modalMenuItemList.removeAll(modalMenuItemList);
+                        for (int i = 0; i < response.body().size(); i++) {
+                            modalMenuItemList.add(new ModalMenuItem(response.body().get(i).getTypeName(), response.body().get(i).getTypeId()));
+                        }
+                        modalDialog.reload(Labels.getLabel(getApplicationContext(), currentState), modalMenuItemList);
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<TaskTypes>> call, Throwable t) {
+                        connectionError();
+                    }
+                });
+                break;
+
+            case State.STATE_GROUP_MAIN_CODE:
+                apiService.getGroupMain(token).enqueue(new Callback<List<GroupMain>>() {
+                    @Override
+                    public void onResponse(Call<List<GroupMain>> call, Response<List<GroupMain>> response) {
+                        modalMenuItemList.removeAll(modalMenuItemList);
+                        for (int i = 0; i < response.body().size(); i++) {
+                            modalMenuItemList.add(new ModalMenuItem(response.body().get(i).getMainName(), response.body().get(i).getMainCode()));
+                        }
+                        modalDialog.reload(Labels.getLabel(getApplicationContext(), currentState), modalMenuItemList);
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<GroupMain>> call, Throwable t) {
+                        connectionError();
+                    }
+                });
+                break;
+
+            case State.STATE_GROUP_CODE:
+                apiService.getGroupCode(stateAndId.get(State.STATE_GROUP_MAIN_CODE).getId(), token).enqueue(new Callback<List<GroupCode>>() {
+                    @Override
+                    public void onResponse(Call<List<GroupCode>> call, Response<List<GroupCode>> response) {
+                        modalMenuItemList.removeAll(modalMenuItemList);
+                        for (int i = 0; i < response.body().size(); i++) {
+                            modalMenuItemList.add(new ModalMenuItem(response.body().get(i).getGroupName(), response.body().get(i).getGroupCode1()));
+                        }
+                        modalDialog.reload(Labels.getLabel(getApplicationContext(), currentState), modalMenuItemList);
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<GroupCode>> call, Throwable t) {
+                        connectionError();
+                    }
+                });
+                break;
+
+            case State.STATE_COURSE_ID:
+                apiService.getCourses(stateAndId.get(State.STATE_GROUP_CODE).getId(), token).enqueue(new Callback<List<Course>>() {
+                    @Override
+                    public void onResponse(Call<List<Course>> call, Response<List<Course>> response) {
+                        modalMenuItemList.removeAll(modalMenuItemList);
+                        for (int i = 0; i < response.body().size(); i++) {
+                            modalMenuItemList.add(new ModalMenuItem(response.body().get(i).getCourseName(), response.body().get(i).getCourseId()));
+                        }
+                        modalDialog.reload(Labels.getLabel(getApplicationContext(), currentState), modalMenuItemList);
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Course>> call, Throwable t) {
+                        connectionError();
+                    }
+                });
+                break;
+
+            case State.STATE_TEST_DATE:
+                apiService.getTestDate(stateAndId.get(State.STATE_GROUP_CODE).getId(), token).enqueue(new Callback<List<TestDate>>() {
+                    @Override
+                    public void onResponse(Call<List<TestDate>> call, Response<List<TestDate>> response) {
+                        modalMenuItemList.removeAll(modalMenuItemList);
+                        for (int i = 0; i < response.body().size(); i++) {
+                            modalMenuItemList.add(new ModalMenuItem(response.body().get(i).getHejri(), response.body().get(i).getDateValue()));
+                        }
+                        modalDialog.reload(Labels.getLabel(getApplicationContext(), currentState), modalMenuItemList);
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<TestDate>> call, Throwable t) {
+                        connectionError();
+                    }
+                });
+                break;
+
+            case State.STATE_BOOKS:
+                apiService.getBooks(token).enqueue(new Callback<List<Book>>() {
+                    @Override
+                    public void onResponse(Call<List<Book>> call, Response<List<Book>> response) {
+                        modalMenuItemList.removeAll(modalMenuItemList);
+                        for (int i = 0; i < response.body().size(); i++) {
+                            modalMenuItemList.add(new ModalMenuItem(response.body().get(i).getBookName(), response.body().get(i).getId()));
+                        }
+                        modalDialog.reload(Labels.getLabel(getApplicationContext(), currentState), modalMenuItemList);
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Book>> call, Throwable t) {
+                        connectionError();
+                    }
+                });
+                break;
+
+            case State.STATE_LOCATION:
+                apiService.getLocations(token).enqueue(new Callback<List<Location>>() {
+                    @Override
+                    public void onResponse(Call<List<Location>> call, Response<List<Location>> response) {
+                        modalMenuItemList.removeAll(modalMenuItemList);
+                        for (int i = 0; i < response.body().size(); i++) {
+                            modalMenuItemList.add(new ModalMenuItem(response.body().get(i).getLocationName(), response.body().get(i).getLocationId()));
+                        }
+                        modalDialog.reload(Labels.getLabel(getApplicationContext(), currentState), modalMenuItemList);
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Location>> call, Throwable t) {
+                        connectionError();
+                    }
+                });
+                break;
+
+            case State.STATE_CHANNEL_ID:
+                apiService.getChannels(token).enqueue(new Callback<List<Channel>>() {
+                    @Override
+                    public void onResponse(Call<List<Channel>> call, Response<List<Channel>> response) {
+                        modalMenuItemList.removeAll(modalMenuItemList);
+                        for (int i = 0; i < response.body().size(); i++) {
+                            modalMenuItemList.add(new ModalMenuItem(response.body().get(i).getChanneName(), response.body().get(i).getChanneId()));
+                        }
+                        modalDialog.reload(Labels.getLabel(getApplicationContext(), currentState), modalMenuItemList);
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Channel>> call, Throwable t) {
+                        connectionError();
+                    }
+                });
+                break;
+
+            case State.STATE_TEST_TYPE:
+                apiService.getTestTypes(stateAndId.get(State.STATE_GROUP_MAIN_CODE).getId(), token).enqueue(new Callback<List<TestType>>() {
+                    @Override
+                    public void onResponse(Call<List<TestType>> call, Response<List<TestType>> response) {
+                        modalMenuItemList.removeAll(modalMenuItemList);
+                        for (int i = 0; i < response.body().size(); i++) {
+                            modalMenuItemList.add(new ModalMenuItem(response.body().get(i).getTestTypeName(), response.body().get(i).getTestTypeId()));
+                        }
+                        modalDialog.reload(Labels.getLabel(getApplicationContext(), currentState), modalMenuItemList);
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<TestType>> call, Throwable t) {
+                        connectionError();
+                    }
+                });
+                break;
+
+            case State.STATE_CATEGORY:
+                apiService.getCategories(token).enqueue(new Callback<List<Category>>() {
+                    @Override
+                    public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
+                        modalMenuItemList.removeAll(modalMenuItemList);
+                        for (int i = 0; i < response.body().size(); i++) {
+                            modalMenuItemList.add(new ModalMenuItem(response.body().get(i).getCatagoryName(), response.body().get(i).getCatagoryId()));
+                        }
+                        modalDialog.reload(Labels.getLabel(getApplicationContext(), currentState), modalMenuItemList);
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Category>> call, Throwable t) {
+                        connectionError();
+                    }
+                });
+                break;
+            case State.STATE_MANAGER_USER_ID:
+                apiService.getManagers(token).enqueue(new Callback<List<Managers>>() {
+                    @Override
+                    public void onResponse(Call<List<Managers>> call, Response<List<Managers>> response) {
+                        modalMenuItemList.removeAll(modalMenuItemList);
+                        for (int i = 0; i < response.body().size(); i++) {
+                            modalMenuItemList.add(new ModalMenuItem(response.body().get(i).getFullname(), response.body().get(i).getUserId()));
+                        }
+                        modalDialog.reload(Labels.getLabel(getApplicationContext(), currentState), modalMenuItemList);
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Managers>> call, Throwable t) {
+                        connectionError();
+                    }
+                });
+            default:
+                break;
+        }
+    }
 
 //    private boolean isFinished() {
-//        if (curState == State.STATE_FINISH)
+//        if (currentState == State.STATE_FINISH)
 //            return true;
 //        else return false;
 //    }
@@ -485,38 +540,10 @@ public class AddTaskActivity extends AppCompatActivity {
         menuListAdapter = new MenuListAdapter(menuItemList, AddTaskActivity.this);
         menuRecyclerView.setAdapter(menuListAdapter);
         menuRecyclerView.setItemAnimator(new DefaultItemAnimator());
+    }
 
-
-        List<ModalMenuItem> modalMenuItemList = new ArrayList<>();
-        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
-        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
-        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
-        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
-        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
-        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
-        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
-        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
-        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
-        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
-        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
-        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
-        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
-        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
-        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
-        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
-        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
-        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
-        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
-        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
-        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
-        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
-        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
-        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
-        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
-        modalMenuItemList.add(new ModalMenuItem("آیتم اول", 2));
-
-        ModalDialog dialog = new ModalDialog("تایتل",modalMenuItemList, AddTaskActivity.this);
-        dialog.show();
+    private void connectionError() {
+        Toast.makeText(getApplicationContext(), getResources().getString(R.string.connectionError), Toast.LENGTH_SHORT).show();
     }
 
 //    private void writeToClass() {
