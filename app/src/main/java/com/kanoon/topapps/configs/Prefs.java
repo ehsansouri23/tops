@@ -15,10 +15,12 @@ public class Prefs {
     public static final String PREF_FIRST_NAME = "firstName";
     public static final String PREF_LAST_NAME = "lastName";
     public static final String PREF_UNIVERSITY = "university";
-    public static final String PREF_AVATAR_PATH = "avatarPath";
+    public static final String PREF_AVATAR = "avatarPath";
     public static final String PREF_NATIONAL_CODE = "nationalCode";
     public static final String PREF_MOBILE_NUMBER = "mobileNumber";
     public static final String PREF_EMAIL = "email";
+    public static final String PREF_IDENTITY_PIC = "identityPic";
+    public static final String PREF_RESULT_PIC = "resultPic";
     public static final String PREF_TOKEN = "token";
 
 

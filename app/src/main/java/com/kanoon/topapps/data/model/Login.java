@@ -144,6 +144,9 @@ public class Login {
         @SerializedName("IdCardPic")
         @Expose
         private String idCardPic;
+        @SerializedName("ResultPic")
+        @Expose
+        private String resultPic;
         @SerializedName("ProfilePicFile")
         @Expose
         private Object profilePicFile;
@@ -365,6 +368,14 @@ public class Login {
 
         public void setIdCardPicFile(Object idCardPicFile) {
             this.idCardPicFile = idCardPicFile;
+        }
+
+        public String getResultPic() {
+            return resultPic;
+        }
+
+        public void setResultPic(String resultPic) {
+            this.resultPic = resultPic;
         }
     }
 
