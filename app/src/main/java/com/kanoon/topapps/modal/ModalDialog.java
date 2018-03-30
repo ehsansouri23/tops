@@ -143,14 +143,6 @@ public class ModalDialog extends Dialog {
 //        return v;
 //    }
 
-//    @Override
-//    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-//        super.onViewCreated(view, savedInstanceState);
-//
-//        textSwitcher.setText(title);
-//
-//    }
-
 
     public void reload(String title, List<ModalMenuItem> modalMenuItemList) {
         textSwitcher.setText(title);
@@ -158,6 +150,8 @@ public class ModalDialog extends Dialog {
         this.modalMenuItemList = modalMenuItemList;
         adapter.setModalMenuItemList(this.modalMenuItemList);
         adapter.notifyDataSetChanged();
+        if (!isShowing())
+            show();
     }
 
 

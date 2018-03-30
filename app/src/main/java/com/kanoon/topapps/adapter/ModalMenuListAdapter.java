@@ -47,9 +47,15 @@ public class ModalMenuListAdapter extends RecyclerView.Adapter<ModalMenuListAdap
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         holder.item.setTypeface(Typeface.createFromAsset(activity.getAssets(),"fonts/sl.ttf"));
         holder.item.setText(modalMenuItemList.get(position).getName());
+        holder.item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                activity.onModalMenuItemClicked(modalMenuItemList.get(position).getId(), modalMenuItemList.get(position).getName());
+            }
+        });
     }
 
     @Override
