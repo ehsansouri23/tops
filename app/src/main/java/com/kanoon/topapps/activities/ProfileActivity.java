@@ -85,6 +85,13 @@ public class ProfileActivity extends AppCompatActivity {
                 pictureViewerDialog.show();
             }
         });
+        resultIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PictureViewerDialog pictureViewerDialog = new PictureViewerDialog(ProfileActivity.this, appPrefs.getString(Prefs.PREF_RESULT_PIC, ""));
+                pictureViewerDialog.show();
+            }
+        });
     }
 
     private void setupFonts() {
