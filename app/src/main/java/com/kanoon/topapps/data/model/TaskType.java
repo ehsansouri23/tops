@@ -391,7 +391,6 @@ public class TaskType {
                     if (getManagerUserId())
                         return State.STATE_MANAGER_USER_ID;
                     break;
-                //todo: take a look at here
                 case State.STATE_GROUP_MAIN_CODE:
                     if (getIsGroup())
                         return State.STATE_GROUP_MAIN_CODE;
@@ -416,7 +415,6 @@ public class TaskType {
                     if (getIsVersion())
                         return State.STATE_VERSION;
                     break;
-                //todo: take a look a here
                 case State.STATE_LOCATION:
                     if (getIsLocation())
                         return State.STATE_LOCATION;

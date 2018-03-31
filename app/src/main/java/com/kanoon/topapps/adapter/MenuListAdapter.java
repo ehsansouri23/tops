@@ -66,7 +66,7 @@ public class MenuListAdapter extends RecyclerView.Adapter<MenuListAdapter.ViewHo
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                activity.onMenuItemClicked(menuItemList.get(position).getState(), menuItemList.get(position).getType(), position);
+                activity.onMenuItemClicked(position);
             }
         });
     }

@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.Display;
 import android.view.View;
@@ -27,6 +28,7 @@ import android.widget.ViewSwitcher;
 import com.kanoon.topapps.R;
 import com.kanoon.topapps.activities.AddTaskActivity;
 import com.kanoon.topapps.adapter.ModalMenuListAdapter;
+import com.kanoon.topapps.consts.State;
 import com.kanoon.topapps.consts.Types;
 
 import java.util.List;
@@ -47,6 +49,7 @@ public class ModalDialog extends Dialog {
     private ModalMenuListAdapter adapter;
     private AddTaskActivity activity;
     private int type;
+    private int editTextMode;
 
     public ModalDialog(String title, List<ModalMenuItem> modalMenuItemList, AddTaskActivity activity) {
         super(activity);
@@ -57,11 +60,12 @@ public class ModalDialog extends Dialog {
         type = Types.TYPE_OPTION;
     }
 
-    public ModalDialog(String title, AddTaskActivity activity) {
+    public ModalDialog(String title, int editTextMode , AddTaskActivity activity) {
         super(activity);
         this.title = title;
         this.activity = activity;
         type = Types.TYPE_INPUT;
+        this.editTextMode = editTextMode;
     }
 
     @Override
@@ -112,36 +116,46 @@ public class ModalDialog extends Dialog {
 
             searchBar = (EditText) findViewById(R.id.search_bar);
             searchBar.setTypeface(Typeface.createFromAsset(activity.getAssets(), "fonts/sl.ttf"));
+            searchBar.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    adapter.getFilter().filter(searchBar.getText());
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                }
+            });
 
         } else {
             titleTextview = (TextView) findViewById(R.id.title);
             enterValue = (EditText) findViewById(R.id.edit);
             submit = (Button) findViewById(R.id.submit);
-            titleTextview.setTypeface(Typeface.createFromAsset(activity.getAssets(), "fonts/sl.ttf"));
             titleTextview.setText(title);
+            if (editTextMode == State.STATE_COUNT || editTextMode == State.STATE_PAGE_COUNT || editTextMode == State.STATE_QUESTION_COUNT
+                    || editTextMode == State.STATE_SUCCESSFUL_CALL_COUNT || editTextMode == State.STATE_UNSUCCESSFUL_CALL_COUNT
+                    || editTextMode == State.STATE_TOTAL_CALL_COUNT || editTextMode == State.STATE_TIME)
+                enterValue.setInputType(InputType.TYPE_CLASS_NUMBER);
+            titleTextview.setTypeface(Typeface.createFromAsset(activity.getAssets(), "fonts/sl.ttf"));
             enterValue.setTypeface(Typeface.createFromAsset(activity.getAssets(), "fonts/sl.ttf"));
             submit.setTypeface(Typeface.createFromAsset(activity.getAssets(), "fonts/sl.ttf"));
+            submit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (enterValue.getText().toString().equals("")) {
+                        enterValue.setHint(R.string.shouldNotEmpty);
+                        enterValue.setHintTextColor(activity.getResources().getColor(R.color.colorAccent));
+                    } else {
+                        activity.onEdittextDialogClicked(enterValue.getText().toString());
+                    }
+                }
+            });
         }
-
-
-        searchBar.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                adapter.getFilter().filter(searchBar.getText());
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });
-
     }
-
-
 
 
     public void reload(String title, List<ModalMenuItem> modalMenuItemList) {
@@ -152,6 +166,10 @@ public class ModalDialog extends Dialog {
         adapter.notifyDataSetChanged();
         if (!isShowing())
             show();
+    }
+
+    public void reload(String title) {
+
     }
 
 

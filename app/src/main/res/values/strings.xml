@@ -61,6 +61,7 @@
     <string name="submit">ارسال</string>
     <string name="enter">وارد کنید</string>
     <string name="doneBtn">بستن</string>
+    <string name="shouldNotEmpty">نمیتواند خالی باشد</string>
 
     <string name="username">نام کاربری</string>
     <string name="password">کلمه عبور</string>

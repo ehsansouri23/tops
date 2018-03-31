@@ -10,6 +10,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,6 +65,7 @@ public class AddTaskActivity extends AppCompatActivity {
     private HashMap<Integer, IdAndValue> stateAndId;
 
     private TextView chooseTextView;
+    private Button submitButton;
 
     private String token;
 
@@ -111,10 +114,10 @@ public class AddTaskActivity extends AppCompatActivity {
 
 //        stateAndId = new HashMap<>();
 
-//        submitButton = (Button) findViewById(R.id.submit_button);
-//        submitButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
+        submitButton = (Button) findViewById(R.id.submit_button);
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 //                writeToClass();
 //                apiService.insertTask(task /*"SM65wZG15HJUJTGN3TTcYayfFwRmHUnFuVDDbPTHiwYqoDvkqXhMcY46guMrsx%2bN%2bBFeVMZihLCdiWgVxTggo1x4DMubX5OGLq6%2bnk3%2bu0sQ0Rfa%2fqth%2fDvpx8mHFJ8O"*/).enqueue(new Callback<Mete>() {
 //                    @Override
@@ -127,8 +130,8 @@ public class AddTaskActivity extends AppCompatActivity {
 //
 //                    }
 //                });
-//            }
-//        });
+            }
+        });
 
 
         //at first
@@ -136,15 +139,6 @@ public class AddTaskActivity extends AppCompatActivity {
         currentState = State.STATE_TASKS_MAIN;
 //        stateAndId.put(currentState, new IdAndValue(0,""));
 
-
-//        editTextDialog = new EditTextDialog(AddTaskActivity.this);
-
-        //setting up menu list
-
-//        modalMenuItemList = new ArrayList<>();
-//        modalDialog = new ModalDialog(Labels.getLabel(getApplicationContext(), State.STATE_TASKS_MAIN), modalMenuItemList, AddTaskActivity.this);
-//        modalDialog.show(getSupportFragmentManager(), "TAG");
-//        getModalMenuItemList(currentState);
 
     }
 
@@ -164,18 +158,20 @@ public class AddTaskActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void onMenuItemClicked(int menuItemState, int menuItemType, int position) {
-        currentState = menuItemState;
-//        this.position = position;
+    public void onMenuItemClicked(int position) {
+        currentState = menuItemList.get(position).getState();
+        this.position = position;
 
-        if (menuItemType == Types.TYPE_OPTION) {
-//            bottomSheetDialog.create(menuItemState, id);
+        if (menuItemList.get(position).getType() == Types.TYPE_OPTION) {
+            modalDialog = new ModalDialog(Labels.getLabel(getApplicationContext(), currentState), modalMenuItemList, AddTaskActivity.this);
+            modalDialog.show();
+            getModalMenuItemList(currentState);
         }
 
-        if (menuItemType == Types.TYPE_INPUT) {
-//            this.position = position;
-//            String title = Labels.getLabel(getApplicationContext(), menuItemState);
-//            editTextDialog.showDialog(title, currentState);
+        if (menuItemList.get(position).getType() == Types.TYPE_INPUT) {
+            modalDialog = new ModalDialog(Labels.getLabel(getApplicationContext(), currentState), currentState, AddTaskActivity.this);
+            modalDialog.show();
+
         }
 //        if (isFinished())
 //            submitButton.setVisibility(View.VISIBLE);
@@ -187,12 +183,31 @@ public class AddTaskActivity extends AppCompatActivity {
         menuItemList.get(position).setDone(true);
         menuItemList.get(position).setChosen(name);
         menuListAdapter.notifyItemChanged(position);
+        if (position != menuItemList.size() - 1) {
+            for (int i = position + 1; i < menuItemList.size(); i++) {
+                menuItemList.remove(i);
+                i--;
+            }
+            menuListAdapter.notifyDataSetChanged();
+        }
         position++;
-        if (currentState == State.STATE_TASK_SUBLEVEL) {
+        if (currentState == State.STATE_TASK_TYPE) {
             apiService.getTaskType(id, token).enqueue(new Callback<TaskType>() {
                 @Override
                 public void onResponse(Call<TaskType> call, Response<TaskType> response) {
                     taskType = response.body();
+                    currentState = taskType.getNextState(currentState);
+
+                    menuItemList.add(new MainMenuItem(currentState));
+                    if (menuItemList.get(position).getType() == Types.TYPE_OPTION) {
+                        getModalMenuItemList(currentState);
+                    } else {
+                        modalDialog.dismiss();
+                        modalDialog = new ModalDialog(Labels.getLabel(getApplicationContext(), currentState), currentState, AddTaskActivity.this);
+                        modalDialog.show();
+                    }
+                    menuListAdapter.notifyItemInserted(position);
+                    menuRecyclerView.smoothScrollToPosition(position);
                 }
 
                 @Override
@@ -200,80 +215,51 @@ public class AddTaskActivity extends AppCompatActivity {
                     connectionError();
                 }
             });
+        } else {
+            currentState = taskType.getNextState(currentState);
+            menuItemList.add(new MainMenuItem(currentState));
+            if (menuItemList.get(position).getType() == Types.TYPE_OPTION) {
+                getModalMenuItemList(currentState);
+            } else {
+                modalDialog.dismiss();
+                modalDialog = new ModalDialog(Labels.getLabel(getApplicationContext(), currentState), currentState, AddTaskActivity.this);
+                modalDialog.show();
+            }
+            menuListAdapter.notifyItemInserted(position);
+            menuRecyclerView.smoothScrollToPosition(position);
         }
+        Log.e(TAG, "onModalMenuItemClicked: current state = " + currentState);
+    }
+
+    public void onEdittextDialogClicked(String name) {
+        stateAndId.put(currentState, new IdAndValue(-1, name));
+        menuItemList.get(position).setDone(true);
+        menuItemList.get(position).setChosen(name);
+        menuListAdapter.notifyItemChanged(position);
+        if (position != menuItemList.size() - 1) {
+            for (int i = position + 1; i < menuItemList.size(); i++) {
+                menuItemList.remove(i);
+                i--;
+            }
+        }
+        menuListAdapter.notifyDataSetChanged();
+        position++;
         currentState = taskType.getNextState(currentState);
+        if (currentState == State.STATE_FINISH) {
+            modalDialog.dismiss();
+            isFinished();
+            return;
+        }
         menuItemList.add(new MainMenuItem(currentState));
-        getModalMenuItemList(currentState);
+        if (menuItemList.get(position).getType() == Types.TYPE_OPTION) {
+            getModalMenuItemList(currentState);
+        } else {
+            modalDialog.dismiss();
+            modalDialog = new ModalDialog(Labels.getLabel(getApplicationContext(), currentState), currentState, AddTaskActivity.this);
+            modalDialog.show();
+        }
         menuListAdapter.notifyItemInserted(position);
         menuRecyclerView.smoothScrollToPosition(position);
-
-//        menuItemList.get(position).setChosen(name);
-//        position++;
-//        final int[] newState = new int[1];
-//        if (name.equals("کانال تلگرام")) {
-//            newState[0] = State.STATE_CHANNEL_ID;
-//            currentState = newState[0];
-//            if (currentState <= State.STATE_CATEGORY) {
-//                getModalMenuItemList(currentState);
-//                modalDialog.reload(Labels.getLabel(getApplicationContext(), currentState), modalMenuItemList);
-//            } else {
-//                modalDialog.dismiss();
-//                editTextDialog.showDialog(Labels.getLabel(getApplicationContext(), currentState), currentState);
-//            }
-//        }
-//        else {
-//        if (currentState == State.STATE_TASK_TYPE) {
-//            apiService.getTaskType(id).enqueue(new Callback<TaskType>() {
-//                @Override
-//                public void onResponse(Call<TaskType> call, Response<TaskType> response) {
-//                    taskType = response.body();
-//                    newState[0] = taskType.getNextState(currentState);
-//                    menuItemList.add(new MainMenuItem(newState[0]));
-//                    menuListAdapter.notifyDataSetChanged();
-//
-//                    currentState = newState[0];
-//                    if (currentState <= State.STATE_CATEGORY) {
-////                        getModalMenuItemList(currentState);
-////                        modalDialog.reload(Labels.getLabel(getApplicationContext(), currentState), modalMenuItemList);
-//                    } else {
-////                        modalDialog.dismiss();
-//                    }
-//
-//                }
-//
-//                @Override
-//                public void onFailure(Call<TaskType> call, Throwable t) {
-//                    connectionError();
-//                }
-//            });
-//        } else {
-//            newState[0] = taskType.getNextState(currentState);
-//
-//            menuItemList.add(new MainMenuItem(newState[0]));
-//            menuListAdapter.notifyDataSetChanged();
-//
-//            currentState = newState[0];
-//            if (currentState <= State.STATE_CATEGORY) {
-////                getModalMenuItemList(currentState);
-////                modalDialog.reload(Labels.getLabel(getApplicationContext(), currentState), modalMenuItemList);
-//            } else {
-////                modalDialog.dismiss();
-//            }
-//        }
-    }
-//        }
-//        if (isFinished())
-//            submitButton.setVisibility(View.VISIBLE);
-//    }
-
-//    public void onEditTextDialogClosed(String chosen) {
-//        stateList.add(currentState);
-//        stateAndId.put(currentState, new IdAndValue(-1, chosen));
-//        menuItemList.get(position).setChosen(chosen);
-//        menuListAdapter.notifyDataSetChanged();
-//        position++;
-//        int newState = taskType.getNextState(currentState);
-//        currentState = newState;
 //        if (isFinished()) {
 //            submitButton.setVisibility(View.VISIBLE);
 //        } else {
@@ -281,8 +267,8 @@ public class AddTaskActivity extends AppCompatActivity {
 //            menuListAdapter.notifyDataSetChanged();
 //            editTextDialog.showDialog(Labels.getLabel(getApplicationContext(), currentState), currentState);
 //        }
-//
-//    }
+
+    }
 
     private void getModalMenuItemList(int state) {
         switch (state) {
@@ -522,11 +508,12 @@ public class AddTaskActivity extends AppCompatActivity {
         }
     }
 
-//    private boolean isFinished() {
-//        if (currentState == State.STATE_FINISH)
-//            return true;
-//        else return false;
-//    }
+    private void isFinished() {
+        if (currentState == State.STATE_FINISH)
+            submitButton.setVisibility(View.VISIBLE);
+        else
+            submitButton.setVisibility(View.INVISIBLE);
+    }
 
     private void setupMenuRecyclerViewAndTitle() {
         chooseTextView = (TextView) findViewById(R.id.choose_title);

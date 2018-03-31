@@ -50,7 +50,7 @@ public class PictureViewerDialog extends Dialog {
 
         Glide.with(context)
                 .load(picPath)
-                .placeholder(R.mipmap.ic_launcher)
+                .placeholder(R.drawable.empty)
                 .into(image);
     }
 }
