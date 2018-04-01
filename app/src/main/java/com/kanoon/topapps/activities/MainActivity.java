@@ -94,7 +94,9 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_add) {
             Intent i = new Intent(MainActivity.this, AddTaskActivity.class);
             startActivity(i);
-        } else if (id == R.id.nav_activities) {
+        } else if (id == R.id.nav_timesheet) {
+            Intent i = new Intent(MainActivity.this, TimeSheetActivity.class);
+            startActivity(i);
 
         } else if (id == R.id.nav_profile) {
             Intent i = new Intent(MainActivity.this, ProfileActivity.class);

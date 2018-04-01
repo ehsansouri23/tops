@@ -1,6 +1,7 @@
 package com.kanoon.topapps.adapter;
 
 import android.graphics.Typeface;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,11 +36,11 @@ public class MenuListAdapter extends RecyclerView.Adapter<MenuListAdapter.ViewHo
 
         public TextView title;
         public TextView chosen;
-        public LinearLayout layout;
+        public CardView layout;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            layout = (LinearLayout) itemView.findViewById(R.id.layout);
+            layout = (CardView) itemView.findViewById(R.id.layout);
             title = (TextView) itemView.findViewById(R.id.title);
             chosen = (TextView) itemView.findViewById(R.id.chosen);
         }
@@ -60,8 +61,9 @@ public class MenuListAdapter extends RecyclerView.Adapter<MenuListAdapter.ViewHo
         holder.title.setText(title);
         holder.chosen.setTypeface(Typeface.createFromAsset(activity.getAssets(), "fonts/sl.ttf"));
         holder.chosen.setText(menuItemList.get(position).getChosen());
-        if (menuItemList.get(position).isDone())
+        if (menuItemList.get(position).isDone()) {
             holder.layout.setBackgroundColor(activity.getApplicationContext().getResources().getColor(R.color.colorDone));
+        }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

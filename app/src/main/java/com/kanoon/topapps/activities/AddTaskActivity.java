@@ -115,6 +115,7 @@ public class AddTaskActivity extends AppCompatActivity {
 //        stateAndId = new HashMap<>();
 
         submitButton = (Button) findViewById(R.id.submit_button);
+        submitButton.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/sl.ttf"));
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

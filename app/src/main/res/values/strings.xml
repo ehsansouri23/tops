@@ -52,7 +52,20 @@
     <string name="send_date">تاریخ ارسال</string>
     <string name="manager">مدیر</string>
 
+    <string name="farvardin">فروردین</string>
+    <string name="ordibehesht">اردیبهشت</string>
+    <string name="khordad">خرداد</string>
+    <string name="tir">تیر</string>
+    <string name="mordad">مرداد</string>
+    <string name="shahrivar">شهریور</string>
+    <string name="mehr">مهر</string>
+    <string name="aban">آبان</string>
+    <string name="azar">آذر</string>
+    <string name="day">دی</string>
+    <string name="bahman">بهمن</string>
+    <string name="esfand">اسفند</string>
 
+    <string name="duration">مدت زمان</string>
     <string name="select_one">انتخاب کنید...</string>
     <string name="select_your_works">فعالیت های خود را انتخاب کنید.</string>
     <string name="connectionError">اتصال به اینترنت برقرار نیست</string>
@@ -72,6 +85,7 @@
     <string name="mobile_number">تلفن همراه</string>
     <string name="university">دانشگاه</string>
     <string name="email">ایمیل</string>
+    <string name="title_activity_time_sheet">تایم شیت</string>
 
 
 </resources>

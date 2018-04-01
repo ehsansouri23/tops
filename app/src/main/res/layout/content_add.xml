@@ -7,29 +7,37 @@
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.kanoon.topapps.activities.AddTaskActivity"
-    tools:showIn="@layout/activity_add" >
+    tools:showIn="@layout/activity_add">
 
     <TextView
         android:id="@+id/choose_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
-        android:text="@string/select_your_works"/>
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="7dp"
+        android:text="@string/select_your_works" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/menu_list"
         android:layout_width="match_parent"
-        android:layout_height="432dp"
+        android:layout_height="400dp"
         android:layout_margin="5dp"
+        android:layout_marginBottom="20dp"
         tools:listitem="@layout/menu_list_item" />
 
     <Button
         android:id="@+id/submit_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        android:background="@drawable/blue_button_ripple"
+        android:gravity="center"
         android:text="@string/submit"
-        android:visibility="gone"/>
+        android:textColor="#f7f7f7"
+        android:visibility="gone" />
 
 </LinearLayout>

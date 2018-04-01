@@ -10,9 +10,9 @@
             android:title="@string/nav_add" />
 
         <item
-            android:id="@+id/nav_activities"
+            android:id="@+id/nav_timesheet"
             android:icon="@drawable/ic_menu_black_24dp"
-            android:title="@string/nav_activities" />
+            android:title="@string/title_activity_time_sheet" />
 
         <!--<item-->
             <!--android:id="@+id/nav_setting"-->

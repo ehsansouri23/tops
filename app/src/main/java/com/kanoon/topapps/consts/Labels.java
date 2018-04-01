@@ -116,4 +116,50 @@ public class Labels {
         }
         return label;
     }
+
+    public static String getMonth(Context context, int month) {
+        String label;
+
+        switch (month) {
+            case 1:
+                label = context.getResources().getString(R.string.farvardin);
+                break;
+            case 2:
+                label = context.getResources().getString(R.string.ordibehesht);
+                break;
+            case 3:
+                label = context.getResources().getString(R.string.khordad);
+                break;
+            case 4:
+                label = context.getResources().getString(R.string.tir);
+                break;
+            case 5:
+                label = context.getResources().getString(R.string.mordad);
+                break;
+            case 6:
+                label = context.getResources().getString(R.string.shahrivar);
+                break;
+            case 7:
+                label = context.getResources().getString(R.string.mehr);
+                break;
+            case 8:
+                label = context.getResources().getString(R.string.aban);
+                break;
+            case 9:
+                label = context.getResources().getString(R.string.azar);
+                break;
+            case 10:
+                label = context.getResources().getString(R.string.day);
+                break;
+            case 11:
+                label = context.getResources().getString(R.string.bahman);
+                break;
+            case 12:
+                label = context.getResources().getString(R.string.esfand);
+                break;
+            default:
+                label = "...";
+        }
+        return label;
+    }
 }

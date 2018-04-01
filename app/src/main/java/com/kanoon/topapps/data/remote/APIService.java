@@ -17,6 +17,7 @@ import com.kanoon.topapps.data.model.TaskType;
 import com.kanoon.topapps.data.model.TaskTypes;
 import com.kanoon.topapps.data.model.TestDate;
 import com.kanoon.topapps.data.model.TestType;
+import com.kanoon.topapps.data.model.TimeSheet;
 
 import java.io.CharArrayReader;
 import java.util.List;
@@ -26,6 +27,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
+import retrofit2.http.Url;
 
 /**
  * Created by ehsan on 2/13/2018.
@@ -82,6 +84,9 @@ public interface APIService {
 
     @GET("GetManagers")
     Call<List<Managers>> getManagers(@Query("token") String token);
+
+    @GET
+    Call<TimeSheet> getTimeSheet(@Url String url);
 
     @POST("Insert")
     Call<Mete> insertTask(@Query("token") String token, @Body Task task);
