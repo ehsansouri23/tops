@@ -50,6 +50,12 @@
         <activity
             android:name=".activities.TimeSheetActivity"
             android:label="@string/title_activity_time_sheet"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activities.AboutActivity"
+            android:label="@string/title_activity_about"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
     </application>
 

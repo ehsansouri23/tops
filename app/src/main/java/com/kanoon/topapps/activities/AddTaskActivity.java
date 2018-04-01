@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.kanoon.topapps.IdAndValue;
 import com.kanoon.topapps.R;
+import com.kanoon.topapps.SendActivityMessageModel;
 import com.kanoon.topapps.adapter.MenuListAdapter;
 import com.kanoon.topapps.configs.Prefs;
 import com.kanoon.topapps.consts.Labels;
@@ -105,32 +106,24 @@ public class AddTaskActivity extends AppCompatActivity {
         modalDialog.show();
         getModalMenuItemList(currentState);
 
-
-//        stateList = new ArrayList<>();
-//        stateList.add(State.STATE_TASKS_MAIN);
-
-//        SharedPreferences appPrefs = Prefs.getAppPrefs(getApplicationContext());
-//        String token = appPrefs.getString()
-
-//        stateAndId = new HashMap<>();
-
         submitButton = (Button) findViewById(R.id.submit_button);
         submitButton.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/sl.ttf"));
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                writeToClass();
-//                apiService.insertTask(task /*"SM65wZG15HJUJTGN3TTcYayfFwRmHUnFuVDDbPTHiwYqoDvkqXhMcY46guMrsx%2bN%2bBFeVMZihLCdiWgVxTggo1x4DMubX5OGLq6%2bnk3%2bu0sQ0Rfa%2fqth%2fDvpx8mHFJ8O"*/).enqueue(new Callback<Mete>() {
-//                    @Override
-//                    public void onResponse(Call<Mete> call, Response<Mete> response) {
-//                        Log.e("--", response.body().getStatus() + "\n" + response.body().getMessage());
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<Mete> call, Throwable t) {
-//
-//                    }
-//                });
+                writeToClass();
+                Log.e(TAG, "onClick: type = \n" + task.toString());
+                apiService.insertTask("http://insp.kanoon.ir/Top/api/Insert?token=" + Prefs.getAppPrefs(getApplicationContext()).getString(Prefs.PREF_TOKEN, ""), task).enqueue(new Callback<SendActivityMessageModel>() {
+                    @Override
+                    public void onResponse(Call<SendActivityMessageModel> call, Response<SendActivityMessageModel> response) {
+                        Toast.makeText(getApplicationContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<SendActivityMessageModel> call, Throwable t) {
+                        connectionError();
+                    }
+                });
             }
         });
 
@@ -174,9 +167,6 @@ public class AddTaskActivity extends AppCompatActivity {
             modalDialog.show();
 
         }
-//        if (isFinished())
-//            submitButton.setVisibility(View.VISIBLE);
-
     }
 
     public void onModalMenuItemClicked(final int id, String name) {
@@ -185,6 +175,7 @@ public class AddTaskActivity extends AppCompatActivity {
         menuItemList.get(position).setChosen(name);
         menuListAdapter.notifyItemChanged(position);
         if (position != menuItemList.size() - 1) {
+            submitButton.setVisibility(View.GONE);
             for (int i = position + 1; i < menuItemList.size(); i++) {
                 menuItemList.remove(i);
                 i--;
@@ -229,7 +220,6 @@ public class AddTaskActivity extends AppCompatActivity {
             menuListAdapter.notifyItemInserted(position);
             menuRecyclerView.smoothScrollToPosition(position);
         }
-        Log.e(TAG, "onModalMenuItemClicked: current state = " + currentState);
     }
 
     public void onEdittextDialogClicked(String name) {
@@ -238,6 +228,7 @@ public class AddTaskActivity extends AppCompatActivity {
         menuItemList.get(position).setChosen(name);
         menuListAdapter.notifyItemChanged(position);
         if (position != menuItemList.size() - 1) {
+            submitButton.setVisibility(View.GONE);
             for (int i = position + 1; i < menuItemList.size(); i++) {
                 menuItemList.remove(i);
                 i--;
@@ -261,14 +252,6 @@ public class AddTaskActivity extends AppCompatActivity {
         }
         menuListAdapter.notifyItemInserted(position);
         menuRecyclerView.smoothScrollToPosition(position);
-//        if (isFinished()) {
-//            submitButton.setVisibility(View.VISIBLE);
-//        } else {
-//            menuItemList.add(new MainMenuItem(newState));
-//            menuListAdapter.notifyDataSetChanged();
-//            editTextDialog.showDialog(Labels.getLabel(getApplicationContext(), currentState), currentState);
-//        }
-
     }
 
     private void getModalMenuItemList(int state) {
@@ -534,104 +517,108 @@ public class AddTaskActivity extends AppCompatActivity {
         Toast.makeText(getApplicationContext(), getResources().getString(R.string.connectionError), Toast.LENGTH_SHORT).show();
     }
 
-//    private void writeToClass() {
-//        for (int i = 0; i < stateList.size(); i++) {
-//            int state = stateList.get(i);
-//            switch (state) {
-//                case State.STATE_TASKS_MAIN:
-//                    task.setTaskMainId(stateAndId.get(state).getId());
-//                    break;
-//                case State.STATE_TASK_SUBLEVEL:
-//                    task.setTaskSubLevelId(stateAndId.get(state).getId());
-//                    break;
-//                case State.STATE_TASK_TYPE:
-//                    task.setTaskType(stateAndId.get(state).getId());
-//                    break;
-//                case State.STATE_MANAGER_USER_ID:
-//                    task.setManagerUserId(stateAndId.get(state).getId());
-//                    break;
-//                case State.STATE_GROUP_MAIN_CODE:
-//                    task.setGroupMainCode(stateAndId.get(state).getId());
-//                    break;
-//                case State.STATE_GROUP_CODE:
-//                    task.setGroupCode(stateAndId.get(state).getId());
-//                    break;
-//                case State.STATE_TEST_DATE:
-//                    task.setTestDate(stateAndId.get(state).getId());
-//                    break;
-//                case State.STATE_BOOKS:
-//                    task.setBookId(stateAndId.get(state).getId());
-//                    break;
-//                case State.STATE_VERSION:
-//                    task.setVersion(stateAndId.get(state).getId());
-//                    break;
-//                case State.STATE_LOCATION:
-//                    task.setLocation(stateAndId.get(state).getId());
-//                    break;
-//                case State.STATE_CHANNEL_ID:
-//                    task.setChannelId(stateAndId.get(state).getId());
-//                    break;
-//                case State.STATE_TEST_TYPE:
-//                    task.setTestType(stateAndId.get(state).getId());
-//                    break;
-//                case State.STATE_CATEGORY:
-//                    task.setCategory(stateAndId.get(state).getId());
-//                    break;
-//                case State.STATE_CRS_SUBJECT:
-//                    task.setCrsSubject(stateAndId.get(state).getValue());
-//                    break;
-//                case State.STATE_SUBJECT:
-//                    task.setSubject(stateAndId.get(state).getValue());
-//                    break;
-//                case State.STATE_SESSION_DATE:
-//                    task.setSendDate(stateAndId.get(state).getValue());
-//                    break;
-//                case State.STATE_SESSION_LOCATION:
-//                    task.setSesssionLocation(stateAndId.get(state).getValue());
-//                    break;
-//                case State.STATE_SESSION_MANAGER:
-//                    task.setSesssionManager(stateAndId.get(state).getValue());
-//                    break;
-//                case State.STATE_TOTAL_CALL_COUNT:
-//                    task.setTotalCallCount(Integer.parseInt(stateAndId.get(state).getValue()));
-//                    break;
-//                case State.STATE_UNSUCCESSFUL_CALL_COUNT:
-//                    task.setUnsuccessfulCallCount(Integer.parseInt(stateAndId.get(state).getValue()));
-//                    break;
-//                case State.STATE_SUCCESSFUL_CALL_COUNT:
-//                    task.setSuccessCallCount(Integer.parseInt(stateAndId.get(state).getValue()));
-//                    break;
-//                case State.STATE_OWNER:
-//                    task.setOwner(stateAndId.get(state).getValue());
-//                    break;
-//                case State.STATE_INTERVIEWEE:
-//                    task.setInterviewee(stateAndId.get(state).getValue());
-//                    break;
-//                case State.STATE_LEARN_SOURCE:
-//                    task.setLearnSource(stateAndId.get(state).getValue());
-//                    break;
-//                case State.STATE_DESCRIPTION:
-//                    task.setDescription(stateAndId.get(state).getValue());
-//                    break;
-//                case State.STATE_COUNT:
-//                    task.setCount(Integer.parseInt(stateAndId.get(state).getValue()));
-//                    break;
-//                case State.STATE_PAGE_COUNT:
-//                    task.setPageCount(Integer.parseInt(stateAndId.get(state).getValue()));
-//                    break;
-//                case State.STATE_QUESTION_COUNT:
-//                    task.setQuestionCount(Integer.parseInt(stateAndId.get(state).getValue()));
-//                    break;
-//                case State.STATE_TIME:
-//                    task.setTime(Integer.parseInt(stateAndId.get(state).getValue()));
-//                    break;
-//                case State.STATE_GENERATE_DATE:
-//                    task.setGenerateDate(stateAndId.get(state).getValue());
-//                    break;
-//                case State.STATE_SEND_DATE:
-//                    task.setSendDate(stateAndId.get(state).getValue());
-//                    break;
-//            }
-//        }
-//    }
+    private void writeToClass() {
+        for (int i = 1; i < State.STATE_FINISH; i++) {
+            int state = -1;
+            if (stateAndId.get(i) != null) {
+                state = stateAndId.get(i).getId();
+                Log.e(TAG, "writeToClass: " + Labels.getLabel(getApplicationContext(), i) + " : " + stateAndId.get(i).getValue());
+                switch (i) {
+                    case State.STATE_TASKS_MAIN:
+                        task.setTaskMainId(stateAndId.get(i).getId());
+                        break;
+                    case State.STATE_TASK_SUBLEVEL:
+                        task.setTaskSubLevelId(stateAndId.get(i).getId());
+                        break;
+                    case State.STATE_TASK_TYPE:
+                        task.setTaskType(stateAndId.get(i).getId());
+                        break;
+                    case State.STATE_MANAGER_USER_ID:
+                        task.setManagerUserId(stateAndId.get(i).getId());
+                        break;
+                    case State.STATE_GROUP_MAIN_CODE:
+                        task.setGroupMainCode(stateAndId.get(i).getId());
+                        break;
+                    case State.STATE_GROUP_CODE:
+                        task.setGroupCode(stateAndId.get(i).getId());
+                        break;
+                    case State.STATE_TEST_DATE:
+                        task.setTestDate(stateAndId.get(i).getId());
+                        break;
+                    case State.STATE_BOOKS:
+                        task.setBookId(stateAndId.get(i).getId());
+                        break;
+                    case State.STATE_VERSION:
+                        task.setVersion(stateAndId.get(i).getId());
+                        break;
+                    case State.STATE_LOCATION:
+                        task.setLocation(stateAndId.get(i).getId());
+                        break;
+                    case State.STATE_CHANNEL_ID:
+                        task.setChannelId(stateAndId.get(i).getId());
+                        break;
+                    case State.STATE_TEST_TYPE:
+                        task.setTestType(stateAndId.get(i).getId());
+                        break;
+                    case State.STATE_CATEGORY:
+                        task.setCategory(stateAndId.get(i).getId());
+                        break;
+                    case State.STATE_CRS_SUBJECT:
+                        task.setCrsSubject(stateAndId.get(i).getValue());
+                        break;
+                    case State.STATE_SUBJECT:
+                        task.setSubject(stateAndId.get(i).getValue());
+                        break;
+                    case State.STATE_SESSION_DATE:
+                        task.setSendDate(stateAndId.get(i).getValue());
+                        break;
+                    case State.STATE_SESSION_LOCATION:
+                        task.setSesssionLocation(stateAndId.get(i).getValue());
+                        break;
+                    case State.STATE_SESSION_MANAGER:
+                        task.setSesssionManager(stateAndId.get(i).getValue());
+                        break;
+                    case State.STATE_TOTAL_CALL_COUNT:
+                        task.setTotalCallCount(Integer.parseInt(stateAndId.get(i).getValue()));
+                        break;
+                    case State.STATE_UNSUCCESSFUL_CALL_COUNT:
+                        task.setUnsuccessfulCallCount(Integer.parseInt(stateAndId.get(i).getValue()));
+                        break;
+                    case State.STATE_SUCCESSFUL_CALL_COUNT:
+                        task.setSuccessCallCount(Integer.parseInt(stateAndId.get(i).getValue()));
+                        break;
+                    case State.STATE_OWNER:
+                        task.setOwner(stateAndId.get(i).getValue());
+                        break;
+                    case State.STATE_INTERVIEWEE:
+                        task.setInterviewee(stateAndId.get(i).getValue());
+                        break;
+                    case State.STATE_LEARN_SOURCE:
+                        task.setLearnSource(stateAndId.get(i).getValue());
+                        break;
+                    case State.STATE_DESCRIPTION:
+                        task.setDescription(stateAndId.get(i).getValue());
+                        break;
+                    case State.STATE_COUNT:
+                        task.setCount(Integer.parseInt(stateAndId.get(i).getValue()));
+                        break;
+                    case State.STATE_PAGE_COUNT:
+                        task.setPageCount(Integer.parseInt(stateAndId.get(i).getValue()));
+                        break;
+                    case State.STATE_QUESTION_COUNT:
+                        task.setQuestionCount(Integer.parseInt(stateAndId.get(i).getValue()));
+                        break;
+                    case State.STATE_TIME:
+                        task.setTime(Integer.parseInt(stateAndId.get(i).getValue()));
+                        break;
+                    case State.STATE_GENERATE_DATE:
+                        task.setGenerateDate(stateAndId.get(i).getValue());
+                        break;
+                    case State.STATE_SEND_DATE:
+                        task.setSendDate(stateAndId.get(i).getValue());
+                        break;
+                }
+            }
+        }
+    }
 }

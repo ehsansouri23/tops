@@ -1,6 +1,6 @@
 package com.kanoon.topapps.data.remote;
 
-import com.kanoon.topapps.Mete;
+import com.kanoon.topapps.SendActivityMessageModel;
 import com.kanoon.topapps.data.model.Book;
 import com.kanoon.topapps.data.model.Category;
 import com.kanoon.topapps.data.model.Channel;
@@ -19,7 +19,6 @@ import com.kanoon.topapps.data.model.TestDate;
 import com.kanoon.topapps.data.model.TestType;
 import com.kanoon.topapps.data.model.TimeSheet;
 
-import java.io.CharArrayReader;
 import java.util.List;
 
 import retrofit2.Call;
@@ -88,7 +87,7 @@ public interface APIService {
     @GET
     Call<TimeSheet> getTimeSheet(@Url String url);
 
-    @POST("Insert")
-    Call<Mete> insertTask(@Query("token") String token, @Body Task task);
+    @POST
+    Call<SendActivityMessageModel> insertTask(@Url String url,  @Body Task task);
 
 }

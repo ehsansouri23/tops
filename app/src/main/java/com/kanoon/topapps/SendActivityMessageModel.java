@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by ehsan on 2/28/2018.
  */
 
-public class Mete {
+public class SendActivityMessageModel {
     @SerializedName("Status")
     @Expose
     private Integer status;

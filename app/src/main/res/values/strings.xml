@@ -86,6 +86,17 @@
     <string name="university">دانشگاه</string>
     <string name="email">ایمیل</string>
     <string name="title_activity_time_sheet">تایم شیت</string>
+    <string name="title_activity_about">درباره ما</string>
+
+    <string name="about_tops_title">اتوماسیون برتر ها</string>
+    <string name="about_help">همکار گرامی \n
+        شما باید گزارش های خود را به صورت روزانه در سامانه ثبت کنید.\n
+    برای ثبت فعالیت ها میتوانید به بخش اضافه کردن گزارش در منوی اصلی بروید.\n
+    توجه کنید که امکان ثبت گزارش برای روز های قبل وجود ندارد.\n
+    همچنین میتوانید گزارش های قبلی ثبت شده خود را در صفحه اصلی و تایم شیتتان را در بخش تایم شیت در منوی اصلی ببینید.\n</string>
+
+    <string name="about_credits">گروه نرم افزاری کانون فرهنگی آموزش\n\n
+    احسان سوری. علی کمالی</string>
 
 
 </resources>

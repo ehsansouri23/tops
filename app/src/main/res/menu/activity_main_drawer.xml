@@ -32,10 +32,10 @@
             <!--android:icon="@drawable/ic_email_black_24dp"-->
             <!--android:title="@string/nav_contactus"/>-->
 
-        <item
-            android:id="@+id/nav_help"
-            android:icon="@drawable/ic_help_black_24dp"
-            android:title="@string/nav_help" />
+        <!--<item-->
+            <!--android:id="@+id/nav_help"-->
+            <!--android:icon="@drawable/ic_help_black_24dp"-->
+            <!--android:title="@string/nav_help" />-->
 
         <item
             android:id="@+id/nav_logout"

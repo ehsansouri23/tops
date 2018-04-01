@@ -454,7 +454,7 @@ public class Task {
                 " \"owner\":" + owner + "," +
                 " \"description\":" + description + "," +
                 " \"taskValue\":" + taskValue + "," +
-                " \"startDate\":" + startDate + "," +
+                " \"startDate\":" + startDate +
                 '}';
     }
 }

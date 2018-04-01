@@ -25,6 +25,7 @@ import com.kanoon.topapps.configs.Prefs;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private static final String TAG = "MainActivity";
 
 
     private View header;
@@ -103,10 +104,8 @@ public class MainActivity extends AppCompatActivity
             startActivity(i);
 
         } else if (id == R.id.nav_aboutus) {
-            Intent i = new Intent(MainActivity.this, AddTaskActivity.class);
+            Intent i = new Intent(MainActivity.this, AboutActivity.class);
             startActivity(i);
-
-        } else if (id == R.id.nav_help) {
 
         } else if (id == R.id.nav_logout) {
             SharedPreferences.Editor editor = appPrefs.edit();
@@ -127,8 +126,8 @@ public class MainActivity extends AppCompatActivity
     void setupHeader() {
         nameHeader.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/sl.ttf"));
         uniHeader.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/sl.ttf"));
-        nameHeader.setText(appPrefs.getString("name", "") + " " + appPrefs.getString("lastName",""));
-        uniHeader.setText(appPrefs.getString("uni", ""));
+        nameHeader.setText(appPrefs.getString(Prefs.PREF_FIRST_NAME, "") + " " + appPrefs.getString(Prefs.PREF_LAST_NAME,""));
+        uniHeader.setText(appPrefs.getString(Prefs.PREF_UNIVERSITY, ""));
 
         Glide.with(getApplicationContext())
                 .load(appPrefs.getString("avatarPath", ""))
