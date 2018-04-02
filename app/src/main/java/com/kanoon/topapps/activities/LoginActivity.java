@@ -5,11 +5,14 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.kanoon.topapps.R;
@@ -59,11 +62,14 @@ public class LoginActivity extends AppCompatActivity {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
                 apiService.loginUser(username.getText().toString(), password.getText().toString()).enqueue(new Callback<Login>() {
                     @Override
                     public void onResponse(Call<Login> call, Response<Login> response) {
                         loginInfo = response.body();
-                        if (loginInfo.getStatus() == 0){
+                        if (loginInfo.getStatus() == 0) {
                             appPrefsEditor.putBoolean(Prefs.PREF_IS_LOGGED_IN, true);
                             appPrefsEditor.putString(Prefs.PREF_FIRST_NAME, loginInfo.getData().getUser().getName());
                             appPrefsEditor.putString(Prefs.PREF_LAST_NAME, loginInfo.getData().getUser().getLastName());
@@ -79,15 +85,16 @@ public class LoginActivity extends AppCompatActivity {
                             Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(mainIntent);
                             finish();
-                        }
-                        else {
-                            Toast.makeText(getApplicationContext(), "invalid pass", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.invalid_pass), Toast.LENGTH_SHORT).show();
+                            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                         }
                     }
 
                     @Override
                     public void onFailure(Call<Login> call, Throwable t) {
-
+                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.connectionError), Toast.LENGTH_SHORT).show();
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                     }
                 });
             }

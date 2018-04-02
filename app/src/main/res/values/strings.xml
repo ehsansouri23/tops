@@ -27,7 +27,7 @@
     <string name="course_id">نام درس</string>
     <string name="test_date">تاریخ آزمون</string>
     <string name="books">نام کتاب</string>
-    <string name="version">تسخه</string>
+    <string name="version">نسخه</string>
     <string name="location">محل استفاده</string>
     <string name="channel_id">نام کانال</string>
     <string name="test_type">نوع دفترچه</string>
@@ -75,6 +75,7 @@
     <string name="enter">وارد کنید</string>
     <string name="doneBtn">بستن</string>
     <string name="shouldNotEmpty">نمیتواند خالی باشد</string>
+    <string name="invalid_pass">نام کاربری یا کلمه عبور اشتباه است</string>
 
     <string name="username">نام کاربری</string>
     <string name="password">کلمه عبور</string>

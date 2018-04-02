@@ -167,10 +167,4 @@ public class ModalDialog extends Dialog {
         if (!isShowing())
             show();
     }
-
-    public void reload(String title) {
-
-    }
-
-
 }

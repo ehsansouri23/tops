@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,6 +39,7 @@ import com.kanoon.topapps.data.model.TaskType;
 import com.kanoon.topapps.data.model.TaskTypes;
 import com.kanoon.topapps.data.model.TestDate;
 import com.kanoon.topapps.data.model.TestType;
+import com.kanoon.topapps.data.model.TimeSheet;
 import com.kanoon.topapps.data.remote.APIService;
 import com.kanoon.topapps.data.remote.ApiUtils;
 import com.kanoon.topapps.menu_item.MainMenuItem;
@@ -127,13 +129,7 @@ public class AddTaskActivity extends AppCompatActivity {
             }
         });
 
-
-        //at first
-//        id = -1;
         currentState = State.STATE_TASKS_MAIN;
-//        stateAndId.put(currentState, new IdAndValue(0,""));
-
-
     }
 
     @Override
@@ -183,7 +179,29 @@ public class AddTaskActivity extends AppCompatActivity {
             menuListAdapter.notifyDataSetChanged();
         }
         position++;
-        if (currentState == State.STATE_TASK_TYPE) {
+        if (currentState == State.STATE_LOCATION) {
+            if (name.equals("کانال تلگرام")) {
+                Log.e(TAG, "onModalMenuItemClicked: telegram selected");
+                currentState = State.STATE_CHANNEL_ID;
+                menuItemList.add(new MainMenuItem(currentState));
+                getModalMenuItemList(currentState);
+                menuListAdapter.notifyItemInserted(position);
+                menuRecyclerView.smoothScrollToPosition(position);
+            } else {
+                currentState = State.STATE_TEST_TYPE;
+                currentState = taskType.getNextState(currentState);
+                menuItemList.add(new MainMenuItem(currentState));
+                if (menuItemList.get(position).getType() == Types.TYPE_OPTION) {
+                    getModalMenuItemList(currentState);
+                } else {
+                    modalDialog.dismiss();
+                    modalDialog = new ModalDialog(Labels.getLabel(getApplicationContext(), currentState), currentState, AddTaskActivity.this);
+                    modalDialog.show();
+                }
+                menuListAdapter.notifyItemInserted(position);
+                menuRecyclerView.smoothScrollToPosition(position);
+            }
+        } else if (currentState == State.STATE_TASK_TYPE) {
             apiService.getTaskType(id, token).enqueue(new Callback<TaskType>() {
                 @Override
                 public void onResponse(Call<TaskType> call, Response<TaskType> response) {
@@ -220,6 +238,7 @@ public class AddTaskActivity extends AppCompatActivity {
             menuListAdapter.notifyItemInserted(position);
             menuRecyclerView.smoothScrollToPosition(position);
         }
+        Log.e(TAG, "onModalMenuItemClicked: state = " + currentState);
     }
 
     public void onEdittextDialogClicked(String name) {

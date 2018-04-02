@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Filter;
 import android.widget.TextView;
 
@@ -91,9 +92,6 @@ public class ModalMenuListAdapter extends RecyclerView.Adapter<ModalMenuListAdap
                             list.add(item);
                     }
                     filteredModalMenuItemList = list;
-                    for (int i = 0; i < filteredModalMenuItemList.size(); i++) {
-                        Log.e("tage", "performFiltering: name = " + filteredModalMenuItemList.get(i).getName() + " id = " + filteredModalMenuItemList.get(i).getId());
-                    }
                 }
                 FilterResults filterResults = new FilterResults();
                 filterResults.values = filteredModalMenuItemList;
